@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 namespace GestionHerramientas.Properties
 {
     public class PropiedadesBaseDeDatos
@@ -9,7 +9,7 @@ namespace GestionHerramientas.Properties
         public static readonly string _BaseDeDatos = "GestionHerramientas";
         public static readonly string _Esquema = "GestionHerramientas";
         public static readonly string _UsuarioBaseDeDatos = "Dguzman";
-        public static readonly string _PwdBaseDeDatos = "Dguzman_sqlserver_03101";
+        public static readonly string _PwdBaseDeDatos = "Admin@SQLServer03101";
 
         //Propiedades especificas
         public static readonly string _TablaColaboradores = "colaborador";
@@ -17,7 +17,7 @@ namespace GestionHerramientas.Properties
         public static string ObtenerStringDeConexion()
         {
             return @"Server=" + _Servidor + "," + _Puerto + ";Database=" + _BaseDeDatos
-                + ";User Id=" + _UsuarioBaseDeDatos + ";Password=" + _PwdBaseDeDatos + "";
+                + ";User Id=" + _UsuarioBaseDeDatos + ";Password=" + _PwdBaseDeDatos + ";TrustServerCertificate=true";
         }
     }
 }

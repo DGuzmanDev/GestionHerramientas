@@ -10,17 +10,22 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Service\" />
     <None Remove="Datos\" />
     <None Remove="Util\" />
     <None Remove="Interfaces\" />
+    <None Remove="db\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Service\" />
     <Folder Include="Datos\" />
     <Folder Include="Util\" />
     <Folder Include="Interfaces\" />
+    <Folder Include="db\" />
   </ItemGroup>
 </Project>

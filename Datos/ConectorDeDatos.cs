@@ -1,22 +1,16 @@
-﻿using System;
-using GestionHerramientas.Models;
+﻿using GestionHerramientas.Models;
 using Microsoft.Data.SqlClient;
 using System.Transactions;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using GestionHerramientas.Properties;
 
 namespace GestionHerramientas.Datos
 {
     public class ConectorDeDatos
     {
-        private ConexionSQLServer ConexionSQLServer;
 
         public ConectorDeDatos()
-        {
-            this.ConexionSQLServer = new ConexionSQLServer();
-        }
+        { }
 
         /**
          * DOCS
@@ -32,39 +26,44 @@ namespace GestionHerramientas.Datos
                 {
                     //TODO: Reducir este metodo, tien que haber algo que pueda centralizarse
                     connection.Open();
-                    string dml = "INSERT INTO colaborador(identificacion, nombre, apellidos, estado) VALUES "
+                    string dml = "INSERT INTO " + PropiedadesBaseDeDatos._BaseDeDatos + "."
+                            + PropiedadesBaseDeDatos._Esquema + "."
+                            + PropiedadesBaseDeDatos._TablaColaboradores
+                            + "(" + Colaborador.ColumnaIdentificacion + ", " + Colaborador.ColumnaNombre
+                            + ", " + Colaborador.ColumnaApellidos + ", " + Colaborador.ColumnaEstado + ") VALUES "
                         + "(@identificacion, @nombre, @apellidos, @estado)";
 
-                    SqlCommand command = new SqlCommand(dml, connection);
-                    command.Parameters.Add("@identificacion", SqlDbType.VarChar).Value = colaborador.Identificacion;
-                    command.Parameters.Add("@nombre", SqlDbType.VarChar).Value = colaborador.Nombre;
-                    command.Parameters.Add("@apellidos", SqlDbType.VarChar).Value = colaborador.Apellidos;
-                    command.Parameters.Add("@estado", SqlDbType.Bit).Value = colaborador.Estado;
+                    SqlCommand insert = new SqlCommand(dml, connection);
+                    insert.Parameters.Add("@identificacion", SqlDbType.VarChar).Value = colaborador.Identificacion;
+                    insert.Parameters.Add("@nombre", SqlDbType.VarChar).Value = colaborador.Nombre;
+                    insert.Parameters.Add("@apellidos", SqlDbType.VarChar).Value = colaborador.Apellidos;
+                    insert.Parameters.Add("@estado", SqlDbType.Bit).Value = colaborador.Estado;
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = insert.ExecuteNonQuery();
                     if (rowsAffected == 1)
                     {
                         tx.Complete();//Commit INSERT
 
-                        string query = "SELECT id, identificacion, nombre, apeliidos, estado, fecha_registro " +
-                            "FROM " + PropiedadesBaseDeDatos._BaseDeDatos + "."
+                        string query = "SELECT * FROM " + PropiedadesBaseDeDatos._BaseDeDatos + "."
                             + PropiedadesBaseDeDatos._Esquema + "."
                             + PropiedadesBaseDeDatos._TablaColaboradores + " " +
-                            "WHERE qwse1q";
+                            "WHERE " + Colaborador.ColumnaIdentificacion + " = @identificacion";
 
-                        SqlCommand comand = new SqlCommand(query, connection);
-                        SqlDataReader sqlDataReader = command.ExecuteReader();
+                        SqlCommand select = new SqlCommand(query, connection);
+                        select.Parameters.Add("@identificacion", SqlDbType.VarChar).Value = colaborador.Identificacion;
+
+                        SqlDataReader sqlDataReader = select.ExecuteReader();
 
                         Colaborador nuevoColaborador = new Colaborador();
 
                         while (sqlDataReader.Read())
                         {
-                            int id = (int)sqlDataReader["id"];
-                            string identificacion = (string)sqlDataReader["identificacion"];
-                            string nombre = (string)sqlDataReader["nombre"];
-                            string apellidos = (string)sqlDataReader["apellidos"];
-                            bool estado = (bool)sqlDataReader["estado"];
-                            DateTime fechaRegistro = sqlDataReader.GetDateTime(4);
+                            int id = (int)sqlDataReader[Colaborador.ColumnaId];
+                            string identificacion = (string)sqlDataReader[Colaborador.ColumnaIdentificacion];
+                            string nombre = (string)sqlDataReader[Colaborador.ColumnaNombre];
+                            string apellidos = (string)sqlDataReader[Colaborador.ColumnaApellidos];
+                            bool estado = (bool)sqlDataReader[Colaborador.ColumnaEstado];
+                            DateTime fechaRegistro = sqlDataReader.GetDateTime(5);
 
                             nuevoColaborador = new Colaborador(id, identificacion, nombre, apellidos, estado, fechaRegistro);
                         }

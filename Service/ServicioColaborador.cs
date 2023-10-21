@@ -1,5 +1,4 @@
-﻿using System;
-using GestionHerramientas.Datos;
+﻿using GestionHerramientas.Datos;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Util;
@@ -8,11 +7,11 @@ namespace GestionHerramientas.Service
 {
     public class ServicioColaborador : IServicioColaborador
     {
-        private ConectorDeDatos ConectorDeDatos;
+        private readonly ConectorDeDatos ConectorDeDatos;
 
         public ServicioColaborador()
         {
-            this.ConectorDeDatos = new ConectorDeDatos();
+            ConectorDeDatos = new ConectorDeDatos();
         }
 
         /**
@@ -44,9 +43,9 @@ namespace GestionHerramientas.Service
          */
         private bool ValidarIntegridadColaborador(Colaborador colaborador)
         {
-            return colaborador == null || StringUtils.IsEmpty(colaborador.Identificacion)
-                     || StringUtils.IsEmpty(colaborador.Nombre)
-                     || StringUtils.IsEmpty(colaborador.Apellidos);
+            return colaborador != null && !StringUtils.IsEmpty(colaborador.Identificacion)
+                     && !StringUtils.IsEmpty(colaborador.Nombre)
+                     && !StringUtils.IsEmpty(colaborador.Apellidos);
         }
     }
 }
