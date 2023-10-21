@@ -26,12 +26,14 @@ namespace GestionHerramientas.Datos
                 {
                     //TODO: Reducir este metodo, tien que haber algo que pueda centralizarse
                     connection.Open();
-                    string dml = "INSERT INTO " + PropiedadesBaseDeDatos._BaseDeDatos + "."
-                            + PropiedadesBaseDeDatos._Esquema + "."
-                            + PropiedadesBaseDeDatos._TablaColaboradores
-                            + "(" + Colaborador.ColumnaIdentificacion + ", " + Colaborador.ColumnaNombre
-                            + ", " + Colaborador.ColumnaApellidos + ", " + Colaborador.ColumnaEstado + ") VALUES "
-                        + "(@identificacion, @nombre, @apellidos, @estado)";
+                    string dml = "INSERT INTO " + PropiedadesBD._BaseDeDatos + "."
+                            + PropiedadesBD._Esquema + "."
+                            + PropiedadesBD._TablaColaboradores + "("
+                            + PropiedadesBD.Colaborador._ColumnaIdentificacion + ", "
+                            + PropiedadesBD.Colaborador._ColumnaNombre + ", "
+                            + PropiedadesBD.Colaborador._ColumnaApellidos + ", "
+                            + PropiedadesBD.Colaborador._ColumnaEstado
+                            + ") VALUES (@identificacion, @nombre, @apellidos, @estado)";
 
                     SqlCommand insert = new SqlCommand(dml, connection);
                     insert.Parameters.Add("@identificacion", SqlDbType.VarChar).Value = colaborador.Identificacion;
@@ -44,10 +46,10 @@ namespace GestionHerramientas.Datos
                     {
                         tx.Complete();//Commit INSERT
 
-                        string query = "SELECT * FROM " + PropiedadesBaseDeDatos._BaseDeDatos + "."
-                            + PropiedadesBaseDeDatos._Esquema + "."
-                            + PropiedadesBaseDeDatos._TablaColaboradores + " " +
-                            "WHERE " + Colaborador.ColumnaIdentificacion + " = @identificacion";
+                        string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
+                            + PropiedadesBD._Esquema + "."
+                            + PropiedadesBD._TablaColaboradores + " " +
+                            "WHERE " + PropiedadesBD.Colaborador._ColumnaIdentificacion + " = @identificacion";
 
                         SqlCommand select = new SqlCommand(query, connection);
                         select.Parameters.Add("@identificacion", SqlDbType.VarChar).Value = colaborador.Identificacion;
@@ -58,11 +60,11 @@ namespace GestionHerramientas.Datos
 
                         while (sqlDataReader.Read())
                         {
-                            int id = (int)sqlDataReader[Colaborador.ColumnaId];
-                            string identificacion = (string)sqlDataReader[Colaborador.ColumnaIdentificacion];
-                            string nombre = (string)sqlDataReader[Colaborador.ColumnaNombre];
-                            string apellidos = (string)sqlDataReader[Colaborador.ColumnaApellidos];
-                            bool estado = (bool)sqlDataReader[Colaborador.ColumnaEstado];
+                            int id = (int)sqlDataReader[PropiedadesBD.Colaborador._ColumnaId];
+                            string identificacion = (string)sqlDataReader[PropiedadesBD.Colaborador._ColumnaIdentificacion];
+                            string nombre = (string)sqlDataReader[PropiedadesBD.Colaborador._ColumnaNombre];
+                            string apellidos = (string)sqlDataReader[PropiedadesBD.Colaborador._ColumnaApellidos];
+                            bool estado = (bool)sqlDataReader[PropiedadesBD.Colaborador._ColumnaEstado];
                             DateTime fechaRegistro = sqlDataReader.GetDateTime(5);
 
                             nuevoColaborador = new Colaborador(id, identificacion, nombre, apellidos, estado, fechaRegistro);

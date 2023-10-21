@@ -7,7 +7,7 @@ namespace GestionHerramientas.Datos
 public class ConexionSQLServer
     {
 
-        private static readonly string _connStr = PropiedadesBaseDeDatos.ObtenerStringDeConexion();
+        private static readonly string _connStr = PropiedadesBD.ObtenerStringDeConexion();
 
         /**
          * DOCS

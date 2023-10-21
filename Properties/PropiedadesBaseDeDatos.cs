@@ -1,7 +1,7 @@
 ﻿
 namespace GestionHerramientas.Properties
 {
-    public class PropiedadesBaseDeDatos
+    public class PropiedadesBD
     {
         //Propiedades generales
         public static readonly string _Servidor = "127.0.0.1";
@@ -18,6 +18,18 @@ namespace GestionHerramientas.Properties
         {
             return @"Server=" + _Servidor + "," + _Puerto + ";Database=" + _BaseDeDatos
                 + ";User Id=" + _UsuarioBaseDeDatos + ";Password=" + _PwdBaseDeDatos + ";TrustServerCertificate=true";
+        }
+
+        public static class Colaborador
+        {
+            //Propiedades estaticas asocias con la Base de Datos
+            public static readonly string _Nombre = "colaborador";
+            public static readonly string _ColumnaId = "id";
+            public static readonly string _ColumnaIdentificacion = "identificacion";
+            public static readonly string _ColumnaNombre = "nombre";
+            public static readonly string _ColumnaApellidos = "apellidos";
+            public static readonly string _ColumnaEstado = "estado";
+            public static readonly string _ColumnaFechaRegistro = "fecha_registro";
         }
     }
 }

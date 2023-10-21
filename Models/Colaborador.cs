@@ -10,14 +10,6 @@ namespace GestionHerramientas.Models
         public bool? Estado { get; set; }
         public DateTime? FechaRegistro { get; set; }
 
-        //Propiedades estaticas asocias con la Base de Datos
-        public static readonly string ColumnaId = "id";
-        public static readonly string ColumnaIdentificacion = "identificacion";
-        public static readonly string ColumnaNombre = "nombre";
-        public static readonly string ColumnaApellidos = "apellidos";
-        public static readonly string ColumnaEstado = "estado";
-        public static readonly string ColumnaFechaRegistro = "fecha_registro";
-
         public Colaborador() { }
 
         public Colaborador(int id, string identificacion, string nombre, string apellidos,
