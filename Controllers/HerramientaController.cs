@@ -1,4 +1,8 @@
-﻿using GestionHerramientas.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -6,29 +10,30 @@ using Microsoft.AspNetCore.Mvc;
 namespace GestionHerramientas.Controllers
 {
     [Route("api/[controller]")]
-    public class ColaboradorController : Controller
+    public class HerramientaController : Controller
     {
-        private readonly ILogger<ColaboradorController> _logger;
+        private readonly ILogger<HerramientaController> _logger;
 
-        private readonly IServicioColaborador ServicioColaborador;
+        private readonly IServicioHerramienta ServicioHerramienta;
 
-        public ColaboradorController(ILogger<ColaboradorController> logger)
+        public HerramientaController(ILogger<HerramientaController> logger)
         {
             _logger = logger;
-            ServicioColaborador = new ServicioColaborador();
+            ServicioHerramienta = new ServicioHerramienta();
         }
+
 
         [HttpPost]
         [Route("registrar")]
-        public Colaborador PostColaborador([FromBody] Colaborador colaborador)
+        public Herramienta PostColaborador([FromBody] Herramienta herramienta)
         {
             try
             {
-                _logger.LogInformation("Ejecutando endpoint de registro de nuevo colaborador");
+                _logger.LogInformation("Ejecutando endpoint de registro de nueva Herramienta");
 
-                if (colaborador != null)
+                if (herramienta != null)
                 {
-                    return ServicioColaborador.Guardar(colaborador);
+                    return ServicioHerramienta.Guardar(herramienta);
                 }
                 else
                 {

@@ -13,6 +13,7 @@ namespace GestionHerramientas.Properties
 
         //Propiedades especificas
         public static readonly string _TablaColaboradores = "colaborador";
+        public static readonly string _TablaHerramientas = "herramienta";
 
         public static string ObtenerStringDeConexion()
         {
@@ -30,6 +31,20 @@ namespace GestionHerramientas.Properties
             public static readonly string _ColumnaApellidos = "apellidos";
             public static readonly string _ColumnaEstado = "estado";
             public static readonly string _ColumnaFechaRegistro = "fecha_registro";
+        }
+
+        public static class Herramienta
+        {
+            //Propiedades estaticas asocias con la Base de Datos
+            public static readonly string _Nombre = "herramienta";
+            public static readonly string _ColumnaId = "id";
+            public static readonly string _ColumnaCodigo = "codigo";
+            public static readonly string _ColumnaNombre = "nombre";
+            public static readonly string _ColumnaDescripcion = "descripcion";
+            public static readonly string _ColumnaColaboradorId = "colaborador_id";
+            public static readonly string _ColumnaFechaRegistro = "fecha_registro";
+            public static readonly string _ColumnaFechaPrestamo = "fecha_prestamo";
+            public static readonly string _ColumnaFechaDevolucion = "fecha_devolucion";
         }
     }
 }
