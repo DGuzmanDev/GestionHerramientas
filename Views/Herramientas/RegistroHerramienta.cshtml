@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Registro de nueva herramienta";
+}
+
+<section id="formulario">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                <form id="formulario_registro" class="needs-validation">
+                    <fieldset>
+                        <legend class="my-4">Ingresar nueva herramienta</legend>
+                        <div class="row mb-3">
+                            <div class="col-sm-4">
+                                <label class="form-label" for="Codigo">Código:</label>
+                                <input class="form-control" type="text" name="Codigo" id="Codigo" value="" required />
+                                <div class="invalid-feedback" id="error_codigo">
+                                    El código es requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm">
+                                <label class="form-label" for="Nombre">Nombre:</label>
+                                <input class="form-control" type="text" name="Nombre" id="Nombre" value="" required />
+                                <div class="invalid-feedback" id="error_nombre">
+                                    El nombre es requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm">
+                                <label class="form-label" for="Descripcion">Descripción</label>
+                                <textarea class="form-control" name="Descripcion" id="Descripcion" required></textarea>
+                                <div class="invalid-feedback" id="error_descripcion">
+                                    La descripción es requerida
+                                </div>
+                            </div>
+                        </div>
+                        <div class="invalid-feedback" id="error_formulario">
+                            <div class="d-flex justify-content-center my-4">
+                                Por favor revise el formulario y complete la información requerida antes de continuar
+                            </div>
+                        </div>
+                        <div class="valid-feedback" id="exito_formulario">
+                            <div class="d-flex justify-content-center my-4">
+                                El registro de la nueva herramienta se ha completado con éxito
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <button class="btn btn-danger w-100" type="button" id="cancelar">
+                                    Cancelar <i class="fa-solid fa-trash px-4"></i>
+                                </button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button class="btn btn-primary w-100" type="submit" id="enviar">
+                                    Enviar <i class="fa-solid fa-paper-plane px-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

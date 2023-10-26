@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GestionHerramientas.Interfaces;
+﻿using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -27,24 +23,25 @@ namespace GestionHerramientas.Controllers
         [Route("registrar")]
         public Herramienta PostColaborador([FromBody] Herramienta herramienta)
         {
-            try
-            {
-                _logger.LogInformation("Ejecutando endpoint de registro de nueva Herramienta");
 
-                if (herramienta != null)
+            if (herramienta != null)
+            {
+                try
                 {
+                    _logger.LogInformation("Ejecutando endpoint de registro de nueva Herramienta");
                     return ServicioHerramienta.Guardar(herramienta);
                 }
-                else
+                catch (Exception exception)
                 {
-                    throw new BadHttpRequestException("El cuerpo de la solicitud no es válido");
+                    //TODO: Mejorar el mensaje, el manejo de errores top level y el tipo de Ex
+                    Console.WriteLine("Error del controller: " + exception.Message);
+                    throw;
                 }
             }
-            catch (Exception exception)
+            else
             {
-                //TODO: Mejorar el mensaje, el manejo de errores top level y el tipo de Ex
-                Console.WriteLine("Error del controller: " + exception.Message);
-                throw;
+                // TODO: Probar de nuevo agregando esto dentro del try cathc para tener el logging general
+                throw new BadHttpRequestException("El cuerpo de la solicitud no es válido");
             }
         }
     }
