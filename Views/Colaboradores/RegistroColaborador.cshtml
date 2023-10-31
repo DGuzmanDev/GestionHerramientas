@@ -1,9 +1,9 @@
 @{
-    ViewData["Title"] = "Registro de nueva herramienta";
+    ViewData["Title"] = "Registro de nuevo colaborador";
 }
 
 @section Scripts {
-    <script src="~/js/herramientas.js" asp-append-version="true"></script>
+    <script src="~/js/colaboradores.js" asp-append-version="true"></script>
 }
 
 <section id="formulario">
@@ -12,18 +12,26 @@
             <div class="col-sm-8">
                 <form id="formulario_registro" class="needs-validation">
                     <fieldset>
-                        <legend class="my-4">Ingresar nueva herramienta</legend>
+                        <legend class="my-4">Ingresar nuevo colaborador</legend>
                         <div class="row mb-3">
                             <div class="col-sm-4">
-                                <label class="form-label" for="Codigo">Código:</label>
-                                <input class="form-control" type="text" name="Codigo" id="Codigo" value="" required />
-                                <div class="invalid-feedback" id="error_codigo">
-                                    El código es requerido
+                                <label class="form-label" for="Identificacion">Identificación</label>
+                                <input class="form-control" type="text" name="Identificacion" id="Identificacion"
+                                    value="" required />
+                                <div class="invalid-feedback" id="error_id">
+                                    La identificación es requerida
                                 </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="form-label" for="Estado">Estado</label>
+                                <select class="form-select" aria-label="Estado" id="Estado" required>
+                                    <option selected value="true">Activo</option>
+                                    <option value="false">Inactivo</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm">
+                            <div class="col-sm-8">
                                 <label class="form-label" for="Nombre">Nombre:</label>
                                 <input class="form-control" type="text" name="Nombre" id="Nombre" value="" required />
                                 <div class="invalid-feedback" id="error_nombre">
@@ -32,11 +40,12 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm">
-                                <label class="form-label" for="Descripcion">Descripción</label>
-                                <textarea class="form-control" name="Descripcion" id="Descripcion" required></textarea>
-                                <div class="invalid-feedback" id="error_descripcion">
-                                    La descripción es requerida
+                            <div class="col-sm-8">
+                                <label class="form-label" for="Apellidos">Apellidos</label>
+                                <input class="form-control" type="text" name="Apellidos" id="Apellidos" value=""
+                                    required />
+                                <div class="invalid-feedback" id="error_apellidos">
+                                    Los apellidos son requeridos
                                 </div>
                             </div>
                         </div>
@@ -47,16 +56,16 @@
                         </div>
                         <div class="valid-feedback" id="exito_formulario">
                             <div class="d-flex justify-content-center my-4">
-                                El registro de la nueva herramienta se ha completado con éxito
+                                El registro del nuevo colaborador se ha completado con éxito
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <button class="btn btn-danger w-100" type="button" id="cancelar">
                                     Cancelar <i class="fa-solid fa-trash px-4"></i>
                                 </button>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <button class="btn btn-primary w-100" type="submit" id="enviar">
                                     Guardar <i class="fa-solid fa-paper-plane px-4"></i>
                                 </button>

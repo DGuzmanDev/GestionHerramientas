@@ -26,30 +26,43 @@ public class HomeController : Controller
         return View("/Views/Herramientas/RegistroHerramienta.cshtml");
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public async void Error()
+    public IActionResult RegistroColaborador()
     {
-        _logger.LogError("Redireccionamiento a la pagina de error");
+        return View("/Views/Colaboradores/RegistroColaborador.cshtml");
+    }
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public async void ErrorHandler()
+    {
+        _logger.LogError("Ejecutando filtro de manejo de errores de los controladores");
+        int statusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+        string responseBody = "Error inesperado del servidor";
 
         var exceptionHandlerPathFeature =
             HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
-        if (exceptionHandlerPathFeature?.Error is BadHttpRequestException)
+        if (exceptionHandlerPathFeature?.Error != null)
         {
-            _logger.LogError("Bad Request Exception");
+            if (exceptionHandlerPathFeature?.Error is HttpError httpError)
+            {
+                statusCode = (int)httpError.StatusCode;
+                responseBody = httpError.ReasonPrase;
+            }
+            else
+            {
+                _logger.LogError($"Excepcion desconocida:{exceptionHandlerPathFeature?.Error.GetType().FullName}");
+            }
         }
 
-        HttpContext.Response.StatusCode = 400;
-        await HttpContext.Response.WriteAsJsonAsync("el error que yo quiero");
-
-        // if (exceptionHandlerPathFeature?.Path == "/")
-        // {
-        //     ExceptionMessage ??= string.Empty;
-        //     ExceptionMessage += " Page: Home.";
-        // }
-        // return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        HttpContext.Response.StatusCode = statusCode;
+        await HttpContext.Response.WriteAsJsonAsync(responseBody);
     }
 
-
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        _logger.LogError("Redireccionamiento a la pagina de error");
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
 }
 

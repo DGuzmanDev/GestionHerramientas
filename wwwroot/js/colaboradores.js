@@ -6,24 +6,25 @@ function animate_feedback(element_id, timeout, show_duration, hide_duration) {
 }
 
 function validar_campos_de_texto() {
-    var codigo = $('#Codigo').val();
+    var identificacion = $('#Identificacion').val();
     var nombre = $('#Nombre').val();
-    var descripcion = $('#Decripcion').val();
+    var apellidos = $('#Apellidos').val();
 
-    return codigo.trim() !== '' || nombre.trim() !== '' || descripcion.trim() !== ''
+    return identificacion.trim() !== '' || nombre.trim() !== '' || apellidos.trim() !== ''
 }
 
 function enviar_formulario() {
-    var herramienta = {
-        "codigo": $('#Codigo').val(),
+    var colaborador = {
+        "identificacion": $('#Identificacion').val(),
         "nombre": $("#Nombre").val(),
-        "descripcion": $("#Descripcion").val()
+        "apellidos": $("#Apellidos").val(),
+        "estado": Boolean($("#Estado").find(":selected").val())
     }
 
     return $.ajax({
         type: "POST",
-        url: "/api/Herramienta/registrar",
-        data: JSON.stringify(herramienta),
+        url: "/api/Colaborador/registrar",
+        data: JSON.stringify(colaborador),
         success: function (data, status) {
             animate_feedback("exito_formulario", 5000, 500, 500);
         },
@@ -70,7 +71,7 @@ function registrar_evento_borrar() {
 
 
 $(document).ready(function () {
-    console.log('herramientas.js JavaScript - Daniel Guzman Chaves - 03101 – Programación avanzada en web - UNED IIIQ 2023');
+    console.log('colaboradores.js JavaScript - Daniel Guzman Chaves - 03101 – Programación avanzada en web - UNED IIIQ 2023');
 
     registrar_evento_borrar();
     registrar_evento_formulario();

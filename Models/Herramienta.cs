@@ -10,6 +10,7 @@ namespace GestionHerramientas.Models
         public int? ColaboradorId { get; set; }
         public Colaborador? Colaborador { get; set; }
         public DateTime? FechaRegistro { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
         public DateTime? FechaPrestamo { get; set; }
         public DateTime? FechaDevolucion { get; set; }
 
@@ -26,7 +27,7 @@ namespace GestionHerramientas.Models
         }
 
         public Herramienta(int id, string codigo, string nombre, string descripcion,
-            int? colaboradorId, Colaborador? colaborador, DateTime fechaRegistro, DateTime fechaPrestamo, DateTime fechaDevolucion)
+            int? colaboradorId, Colaborador? colaborador, DateTime fechaRegistro, DateTime fechaActualizacion, DateTime fechaPrestamo, DateTime fechaDevolucion)
         {
             Id = id;
             Codigo = codigo;
@@ -35,6 +36,7 @@ namespace GestionHerramientas.Models
             ColaboradorId = colaboradorId;
             Colaborador = colaborador;
             FechaRegistro = fechaRegistro;
+            FechaActualizacion = fechaActualizacion;
             FechaPrestamo = fechaPrestamo;
             FechaDevolucion = fechaDevolucion;
         }
