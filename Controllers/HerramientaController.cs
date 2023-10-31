@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GestionHerramientas.Interfaces;
+﻿using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -25,15 +21,16 @@ namespace GestionHerramientas.Controllers
 
         [HttpPost]
         [Route("registrar")]
-        public Herramienta PostColaborador([FromBody] Herramienta herramienta)
+        public Herramienta PostHerramienta([FromBody] Herramienta herramienta)
         {
+            Herramienta respuesta = new();
+
             try
             {
                 _logger.LogInformation("Ejecutando endpoint de registro de nueva Herramienta");
-
                 if (herramienta != null)
                 {
-                    return ServicioHerramienta.Guardar(herramienta);
+                    respuesta = ServicioHerramienta.Guardar(herramienta);
                 }
                 else
                 {
@@ -42,11 +39,36 @@ namespace GestionHerramientas.Controllers
             }
             catch (Exception exception)
             {
-                //TODO: Mejorar el mensaje, el manejo de errores top level y el tipo de Ex
-                Console.WriteLine("Error del controller: " + exception.Message);
-                throw;
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PostHerramienta), _logger);
             }
+
+            return respuesta;
+        }
+
+        [HttpPut]
+        [Route("prestar")]
+        public Herramienta PutHerramienta([FromBody] Herramienta herramienta)
+        {
+            Herramienta respuesta = new();
+
+            try
+            {
+                _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramienta");
+                if (herramienta != null)
+                {
+                    return ServicioHerramienta.Actualizar(herramienta);
+                }
+                else
+                {
+                    throw new BadHttpRequestException("El cuerpo de la solicitud no es válido");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutHerramienta), _logger);
+            }
+
+            return respuesta;
         }
     }
 }
-

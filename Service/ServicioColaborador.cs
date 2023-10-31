@@ -27,8 +27,7 @@ namespace GestionHerramientas.Service
                 }
                 else
                 {
-                    //TDOD: Mejorar el mensaje y el tipo de EX
-                    throw new Exception("Colaborador invalido");
+                    throw new HttpError.BadRequest("Colaborador invalido");
                 }
             }
             catch (Exception error)

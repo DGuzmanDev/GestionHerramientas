@@ -20,6 +20,7 @@
     <None Remove="Util\" />
     <None Remove="Interfaces\" />
     <None Remove="db\" />
+    <None Remove="Views\Herramientas\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Service\" />
@@ -27,5 +28,6 @@
     <Folder Include="Util\" />
     <Folder Include="Interfaces\" />
     <Folder Include="db\" />
+    <Folder Include="Views\Herramientas\" />
   </ItemGroup>
 </Project>

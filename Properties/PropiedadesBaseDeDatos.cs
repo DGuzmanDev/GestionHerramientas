@@ -31,6 +31,7 @@ namespace GestionHerramientas.Properties
             public static readonly string _ColumnaApellidos = "apellidos";
             public static readonly string _ColumnaEstado = "estado";
             public static readonly string _ColumnaFechaRegistro = "fecha_registro";
+            public static readonly string _ColumnaFechaActualizacion = "fecha_actualizacion";
         }
 
         public static class Herramienta
@@ -43,6 +44,7 @@ namespace GestionHerramientas.Properties
             public static readonly string _ColumnaDescripcion = "descripcion";
             public static readonly string _ColumnaColaboradorId = "colaborador_id";
             public static readonly string _ColumnaFechaRegistro = "fecha_registro";
+            public static readonly string _ColumnaFechaActualizacion = "fecha_actualizacion";
             public static readonly string _ColumnaFechaPrestamo = "fecha_prestamo";
             public static readonly string _ColumnaFechaDevolucion = "fecha_devolucion";
         }
