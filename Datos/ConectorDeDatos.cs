@@ -113,6 +113,27 @@ namespace GestionHerramientas.Datos
             }
         }
 
+        /// <inheritdoc />
+        public int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                connection.Open();
+                return RepositorioHerramienta.ContarHerramientasPrestadasPorColaboradorId(colaboradorId, connection);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error guardando contando herramientas prestadas. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
     }
 }
 

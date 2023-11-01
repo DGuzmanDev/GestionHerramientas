@@ -15,6 +15,7 @@ namespace GestionHerramientas.Service
             ConectorDeDatos = new ConectorDeDatos();
         }
 
+        /// <inheritdoc />
         public Herramienta Guardar(Herramienta herramienta)
         {
             try
@@ -25,7 +26,7 @@ namespace GestionHerramientas.Service
                 }
                 else
                 {
-                    throw new HttpError.BadRequest("Herramienta invalida");
+                    throw new ArgumentNullException(nameof(herramienta), "Herramienta invalida");
                 }
             }
             catch (Exception error)
@@ -35,17 +36,19 @@ namespace GestionHerramientas.Service
             }
         }
 
+        /// <inheritdoc />
         public Herramienta Actualizar(Herramienta herramienta)
         {
             try
             {
-                if (ValidarIntegridadHerramienta(herramienta) && ValidarCondicionesPrestamo(herramienta))
+                if (herramienta != null)
                 {
+                    ValidarCondicionesDePrestamo(herramienta);
                     return ConectorDeDatos.ActualizarHerramienta(herramienta);
                 }
                 else
                 {
-                    throw new HttpError.BadRequest("Herramienta invalida");
+                    throw new ArgumentNullException(nameof(herramienta), "Herramienta invalida");
                 }
             }
             catch (Exception error)
@@ -55,31 +58,56 @@ namespace GestionHerramientas.Service
             }
         }
 
-        /**
-        * DOCS
-        */
+        // TODO: Docs
         private bool ValidarIntegridadHerramienta(Herramienta herramienta)
         {
             return herramienta != null && !StringUtils.IsEmpty(herramienta.Nombre)
                      && !StringUtils.IsEmpty(herramienta.Descripcion);
         }
 
-        private bool ValidarCondicionesPrestamo(Herramienta herramienta)
+        // TODO: Docs
+        private void ValidarCondicionesDePrestamo(Herramienta herramienta)
         {
-            bool valido = false;
+            ValidarFechaDePrestamo(herramienta);
+            ValidarCantidadDeHerramientasPrestadas(herramienta);
+        }
 
-            if (herramienta.ColaboradorId != null && herramienta.FechaPrestamo != null
-                        && herramienta.FechaDevolucion != null)
+        // TODO: DOcs
+        private void ValidarFechaDePrestamo(Herramienta herramienta)
+        {
+            herramienta.FechaPrestamo = DateTime.Now;
+
+            if (herramienta.FechaDevolucion != null && herramienta.FechaDevolucion > herramienta.FechaPrestamo)
             {
                 int diasPrestamo = (herramienta.FechaDevolucion.Value.Date - herramienta.FechaPrestamo.Value.Date).Days;
-                valido = diasPrestamo > 0 && diasPrestamo <= 5;
+
+                if (diasPrestamo <= 0 || diasPrestamo > 5)
+                {
+                    throw new ArgumentException("No se puede execeder más de 5 días de préstamo");
+                }
             }
+            else
+            {
+                throw new ArgumentException("Fecha de devolución inválida");
+            }
+        }
 
-            // aqui todavia hace falta validar si el colaborador se le puede prestar mas herramientas
-            // solo se le puede prestar un maximo de 5 herramientas. so ya tien las 5 no se le puede prestar mas
-            // entonces tengo que mejorar los mensajes de error de este endpoint para que mande mensajes mas elaborados y especificos al FE
+        // TODO: Docs
+        private void ValidarCantidadDeHerramientasPrestadas(Herramienta herramienta)
+        {
+            if (herramienta.ColaboradorId != null)
+            {
+                int herramientasPrestadas = ConectorDeDatos.ContarHerramientasPrestadasPorColaboradorId(herramienta.ColaboradorId.Value);
 
-            return valido;
+                if (herramientasPrestadas == 5)
+                {
+                    throw new ArgumentException("El colaborador ha alcanzado el limite máximo de herramientas prestadas (5)");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Colaborador inválido");
+            }
         }
     }
 }

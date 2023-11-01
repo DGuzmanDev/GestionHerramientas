@@ -14,9 +14,7 @@ namespace GestionHerramientas.Service
             ConectorDeDatos = new ConectorDeDatos();
         }
 
-        /**
-         * DOCS
-         */
+        // TODO DOCS
         public Colaborador Guardar(Colaborador colaborador)
         {
             try
@@ -27,7 +25,7 @@ namespace GestionHerramientas.Service
                 }
                 else
                 {
-                    throw new HttpError.BadRequest("Colaborador invalido");
+                    throw new ArgumentNullException(nameof(colaborador), "Colaborador invalido");
                 }
             }
             catch (Exception error)
@@ -37,9 +35,7 @@ namespace GestionHerramientas.Service
             }
         }
 
-        /**
-         * DOCS
-         */
+        // TODO Docs
         private bool ValidarIntegridadColaborador(Colaborador colaborador)
         {
             return colaborador != null && !StringUtils.IsEmpty(colaborador.Identificacion)

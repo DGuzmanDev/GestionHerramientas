@@ -9,6 +9,9 @@ namespace GestionHerramientas.Interfaces
         Colaborador GuardarColaborador(Colaborador colaborador);
 
         // TODO: Docs
+        int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId);
+
+        // TODO: Docs
         Herramienta GuardarHerramienta(Herramienta herramienta);
 
         // TODO: Docs

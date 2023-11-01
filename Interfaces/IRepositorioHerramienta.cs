@@ -15,6 +15,10 @@ namespace GestionHerramientas.Interfaces
         // TODO: DOCS
         Herramienta SeleccionarPorId(int id, SqlConnection connection);
 
+        // TODO: Docs
         Herramienta SeleccionarPorCodigo(string codigo, SqlConnection connection);
+
+        // TODO: Docs
+        int ContarHerramientasPrestadasPorColaboradorId(int id, SqlConnection connection);
     }
 }

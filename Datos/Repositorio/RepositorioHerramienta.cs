@@ -144,5 +144,19 @@ namespace GestionHerramientas.Datos.Repositorio
 
             return nuevaHerramienta;
         }
+
+        /// <inheritdoc />
+        public int ContarHerramientasPrestadasPorColaboradorId(int id, SqlConnection connection)
+        {
+            string query = "SELECT COUNT(id) FROM " + PropiedadesBD._BaseDeDatos + "."
+                            + PropiedadesBD._Esquema + "."
+                            + PropiedadesBD._TablaHerramientas + " " +
+                            "WHERE " + PropiedadesBD.Herramienta._ColumnaColaboradorId + " = @id";
+
+            SqlCommand count = new(query, connection);
+            count.Parameters.Add("@id", SqlDbType.Int).Value = id;
+
+            return (int)count.ExecuteScalar();
+        }
     }
 }

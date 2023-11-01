@@ -11,9 +11,13 @@ namespace GestionHerramientas.Controllers
             {
                 throw httpError;
             }
+            else if (error is ArgumentNullException || error is ArgumentException)
+            {
+                throw new HttpError.BadRequest($"La solicitud no puede ser procesada: {error.Message}");
+            }
             else
             {
-                throw new HttpError.InternalServerError("Error inesperado del servidor");
+                throw new HttpError.InternalServerError($"Error inesperado del servidor: {error.Message}");
             }
         }
     }

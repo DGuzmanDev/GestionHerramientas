@@ -18,7 +18,7 @@ function enviar_formulario() {
         "identificacion": $('#Identificacion').val(),
         "nombre": $("#Nombre").val(),
         "apellidos": $("#Apellidos").val(),
-        "estado": Boolean($("#Estado").find(":selected").val())
+        "estado": $("#Estado").find(":selected").val() === 'true'
     }
 
     return $.ajax({

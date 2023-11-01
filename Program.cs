@@ -7,7 +7,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddSession();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,10 +28,10 @@ app.UseExceptionHandler("/Home/ErrorHandler");
 //else
 //Este caso se utiliza para ejecutarse en plataformas Windows
 app.UseStaticFiles();
-
 app.UseAuthorization();
-app.MapControllers();
+app.UseSession();
 
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
