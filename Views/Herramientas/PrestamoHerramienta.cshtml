@@ -1,0 +1,89 @@
+@{
+    ViewData["Title"] = "Registro de nueva herramienta";
+}
+
+@section Scripts {
+    <script src="~/js/herramientas.js" asp-append-version="true"></script>
+}
+
+<section id="formulario">
+    <div class="container">
+        <form id="formulario_registro" class="needs-validation">
+            <fieldset>
+                <legend class="my-4">Prestar herramienta</legend>
+                <div class="row mb-3">
+                    <div class="row">
+                        <div class="col-sm">
+                            <label class="form-label" for="Identificacion">Identificación del
+                                colaborador</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" name="Identificacion" id="Identificacion" value=""
+                                required="">
+                            <div class="invalid-feedback" id="error_id">
+                                La identificación es requerida
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-primary w-100" type="submit" id="buscar_colaborador">
+                                Buscar colaborador <i class="fa-solid fa-magnifying-glass px-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="row">
+                        <div class="col-sm">
+                            <label class="form-label" for="Codigo">Código de la herramienta:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text" name="Codigo" id="Codigo" value="" required="">
+                            <div class="invalid-feedback" id="error_codigo">
+                                El código es requerido
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-primary w-100" type="submit" id="buscar_herramienta">
+                                Buscar herramienta <i class="fa-solid fa-magnifying-glass px-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    @* en este mae ahora va una tabla con los resultados de la busqueda de herramientas
+                    puedo hacer un search LIKE en la DB usando el codigo de la herramienta para poder encontrar
+                    todos los codigos que hagan match con la herramienta
+                    La vara es como seleccionar las herramientas, al buscar en la tabla, tendria que tener un checkbox
+                    que se asocie a un evento que permita seleccionar N cantidad de herramientas hasta 5.
+                    Tambien puedo consultar la cantidad de herramientas que tiene un colaborador dado para saber de
+                    antemano
+                    cuantas se le pueden prestar o si quiera si es elegible para prestales mas.
+                    Al evento del checkbox le voy agregando un contador con la vara
+                    Tengo que validar si el colaborador esta activo o no al hacer la busqueda, tambien agregar esto a la
+                    logica de negocios del BE *@
+                </div>
+                <div class="invalid-feedback" id="error_formulario">
+                    <div class="d-flex justify-content-center my-4">
+                        Por favor revise el formulario y complete la información requerida antes de continuar
+                    </div>
+                </div>
+                <div class="valid-feedback" id="exito_formulario">
+                    <div class="d-flex justify-content-center my-4">
+                        El préstamo de la herramienta se ha completado con éxito
+                    </div>
+                </div>
+                <div class="row my-3 py-3">
+                    <div class="col-sm-10">
+                        <button class="btn btn-primary w-100" type="submit" id="enviar" disabled="">
+                            Guardar <i class="fa-solid fa-paper-plane px-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</section>
