@@ -14,8 +14,18 @@ namespace GestionHerramientas.Interfaces
         /// nombre, descripción y fecha_registro (auto-generada)
         /// </remarks>
         /// <param name="herramienta">
-        /// <see cref="GestionHerramientas.Models.Herramienta">Herramienta</see>
+        /// <c cref="GestionHerramientas.Models.Herramienta">Herramienta</c> con los datos a insertar en la base de datos
         /// </param>
+        /// <returns>
+        /// <paramref cref="GestionHerramientas.Models.Herramienta">Herramienta</paramref> insertada en la base de datos
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Se lanza cuando el parametro herramienta es nulo
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Se lanza si las propiedades esperadas del parametro herramienta no son validas para satisfacer las necesidades
+        /// del flujo de trabajo
+        /// </exception>
         Herramienta Guardar(Herramienta herramienta);
 
         /// <summary>
@@ -27,8 +37,18 @@ namespace GestionHerramientas.Interfaces
         /// fecha_prestamp, fecha_devolucion y fecha_actualizacion (auto-generada)
         /// </remarks>
         /// <param name="herramienta">
-        /// <see cref="GestionHerramientas.Models.Herramienta">Herramienta</see>
+        /// <c cref="GestionHerramientas.Models.Herramienta">Herramienta</c> con los datos a actualizar en la base de datos
         /// </param>
+        /// <returns>
+        /// <paramref cref="GestionHerramientas.Models.Herramienta">Herramienta</paramref> actualizada en la base de datos
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Se lanza cuando el parametro herramienta es nulo
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Se lanza si las propiedades esperadas del parametro herramienta no son validas para satisfacer las necesidades
+        /// del flujo de trabajo
+        /// </exception>
         Herramienta Actualizar(Herramienta herramienta);
     }
 }
