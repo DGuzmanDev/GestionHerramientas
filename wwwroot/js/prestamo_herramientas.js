@@ -90,6 +90,8 @@ function mostrar_error_seleccion_herramienta(mensaje) {
 }
 
 function actualizar_tabla_seleccion() {
+    $("#seleccion-body").html("");
+
     for (let index = 0; index < lista_herramientas_prestamo.length; index++) {
         var herramienta = lista_herramientas_prestamo[index];
 
@@ -103,12 +105,20 @@ function actualizar_tabla_seleccion() {
             '<i class="far fa-trash-alt"></i></button></div></td></tr>';
 
         $("#seleccion-body").append(tr);
+
         $("#herramienta-seleccion-" + herramienta.id).on("click", function (event) {
+            var herramientaId = this.id.replace("herramienta-seleccion-", "");
+
+            var herramientaSelecionada = lista_herramientas_prestamo.find(item => {
+                return item.id == herramientaId
+            });
+
             for (let index = 0; index < lista_herramientas_prestamo.length; index++) {
                 var elemento = lista_herramientas_prestamo[index];
-                if (elemento.id == herramienta.id) {
+                if (elemento.id == herramientaSelecionada.id) {
                     lista_herramientas_prestamo.splice(index, 1);
-                    $("#seleccion-" + herramienta.id).remove();
+                    $("#seleccion-" + herramientaSelecionada.id).remove();
+                    $("#herramienta-" + herramientaSelecionada.id).prop("disabled", false);
                     break;
                 }
             }
@@ -121,7 +131,7 @@ function agregar_herramienta(herramienta) {
     $("#error_seleccion_msg").html("");
     $("#error_seleccion").hide();
 
-    if (herramienta.colaboradorId === 0) {
+    if (herramienta.colaboradorId === undefined || herramienta.colaboradorId === 0) {
         for (let index = 0; index < lista_herramientas_prestamo.length; index++) {
             var elmento = lista_herramientas_prestamo[index];
 
@@ -136,10 +146,15 @@ function agregar_herramienta(herramienta) {
                 var fecha_devolucion = $("#fecha_devolucion").val();
 
                 if (fecha_devolucion != undefined && fecha_devolucion !== '') {
-                    herramienta.colaboradorId = colaborador.id;
-                    herramienta.fechaDevolucion = $("#fecha_devolucion").val();
-                    lista_herramientas_prestamo.push(herramienta);
-                    actualizar_tabla_seleccion();
+                    if (lista_herramientas_prestamo.length < 5) {
+                        herramienta.colaboradorId = colaborador.id;
+                        herramienta.fechaDevolucion = $("#fecha_devolucion").val();
+                        lista_herramientas_prestamo.push(herramienta);
+                        actualizar_tabla_seleccion();
+                        $("#herramienta-" + herramienta.id).prop("disabled", true);
+                    } else {
+                        mostrar_error_seleccion_herramienta("No se pueden seleccionar más de 5 herramientas para préstamo");
+                    }
                 } else {
                     animate_feedback("error_fecha", 5000, 500, 500);
                     mostrar_error_seleccion_herramienta("La fecha de devolucion es invalida");
@@ -183,8 +198,13 @@ function cargar_resultados_herramientas(herramientas) {
 
             $("#result-body").append(tr);
             $("#herramienta-" + herramienta.id).on("click", function (event) {
-                agregar_herramienta(herramienta);
-                $("#herramienta-" + herramienta.id).prop("disabled", true);
+                var herramientaId = this.id.replace("herramienta-", "");
+
+                var herramientaSelecionada = herramientas.find(item => {
+                    return item.id == herramientaId
+                });
+
+                agregar_herramienta(herramientaSelecionada);
             });
         }
     } else {
