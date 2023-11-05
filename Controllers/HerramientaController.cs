@@ -3,6 +3,7 @@ using GestionHerramientas.Models;
 using GestionHerramientas.Service;
 using GestionHerramientas.Util;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestionHerramientas.Controllers
 {
@@ -58,6 +59,32 @@ namespace GestionHerramientas.Controllers
                 if (herramienta != null)
                 {
                     return ServicioHerramienta.Actualizar(herramienta);
+                }
+                else
+                {
+                    throw new BadHttpRequestException("El cuerpo de la solicitud no es válido");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutHerramienta), _logger);
+            }
+
+            return respuesta;
+        }
+
+        [HttpPut]
+        [Route("prestar/lista")]
+        public List<Herramienta> PutHerramienta([FromBody] List<Herramienta> herramientas)
+        {
+            List<Herramienta> respuesta = new();
+
+            try
+            {
+                _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramienta");
+                if (!herramientas.IsNullOrEmpty())
+                {
+                    return ServicioHerramienta.Actualizar(herramientas);
                 }
                 else
                 {

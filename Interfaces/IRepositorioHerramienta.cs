@@ -13,6 +13,9 @@ namespace GestionHerramientas.Interfaces
         void Actualizar(Herramienta herramienta, SqlConnection connection, TransactionScope tx);
 
         // TODO: DOCS
+        void Actualizar(List<Herramienta> herramienta, SqlConnection connection, TransactionScope tx);
+
+        // TODO: DOCS
         Herramienta SeleccionarPorId(int id, SqlConnection connection);
 
         // TODO: Docs

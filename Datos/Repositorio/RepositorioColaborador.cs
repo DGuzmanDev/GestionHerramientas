@@ -1,5 +1,6 @@
 using System.Data;
 using System.Transactions;
+using GestionHerramientas.Exceptions;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Properties;
@@ -36,9 +37,37 @@ namespace GestionHerramientas.Datos.Repositorio
             }
             else
             {
-                //TODO: Agregar un mejor mensaje de error y un exception type mas apropiado
-                throw new Exception("No se pudo guardar el Colaborador");
+                throw new DataBaseError.ErrorDeConsistenciaDeDatos("No se pudo guardar el Colaborador");
             }
+        }
+
+        /// <inheritdoc />
+        public Colaborador SelecionarPorId(int id, SqlConnection connection)
+        {
+            string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
+                         + PropiedadesBD._Esquema + "."
+                         + PropiedadesBD._TablaColaboradores + " "
+                         + "WHERE " + PropiedadesBD.Colaborador._ColumnaId + " = @id ";
+
+            SqlCommand select = new(query, connection);
+            select.Parameters.Add("@id", SqlDbType.Int).Value = id;
+
+            SqlDataReader sqlDataReader = select.ExecuteReader();
+
+            Colaborador nuevoColaborador = new();
+            while (sqlDataReader.Read())
+            {
+                string identificacion = (string)sqlDataReader[PropiedadesBD.Colaborador._ColumnaIdentificacion];
+                string nombre = (string)sqlDataReader[PropiedadesBD.Colaborador._ColumnaNombre];
+                string apellidos = (string)sqlDataReader[PropiedadesBD.Colaborador._ColumnaApellidos];
+                bool estado = (bool)sqlDataReader[PropiedadesBD.Colaborador._ColumnaEstado];
+                DateTime fechaRegistro = (DateTime)sqlDataReader[PropiedadesBD.Colaborador._ColumnaFechaRegistro];
+                DateTime fechaActualizacion = (DateTime)sqlDataReader[PropiedadesBD.Colaborador._ColumnaFechaActualizacion];
+                nuevoColaborador = new(id, identificacion, nombre, apellidos, estado, fechaRegistro, fechaActualizacion);
+            }
+
+            sqlDataReader.Close();
+            return nuevoColaborador;
         }
 
         /// <inheritdoc />
@@ -68,6 +97,7 @@ namespace GestionHerramientas.Datos.Repositorio
                 nuevoColaborador = new(id, identificacion, nombre, apellidos, estado, fechaRegistro, fechaActualizacion);
             }
 
+            sqlDataReader.Close();
             return nuevoColaborador;
         }
     }

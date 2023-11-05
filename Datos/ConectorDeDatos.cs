@@ -4,6 +4,7 @@ using System.Transactions;
 using GestionHerramientas.Datos.Repositorio;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Util;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestionHerramientas.Datos
 {
@@ -136,6 +137,45 @@ namespace GestionHerramientas.Datos
         }
 
         /// <inheritdoc />
+        public List<Herramienta> ActualizarHerramientas(List<Herramienta> herramientas)
+        {
+            if (!herramientas.IsNullOrEmpty())
+            {
+                using (TransactionScope tx = new(TransactionScopeOption.RequiresNew))
+                {
+                    SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+                    try
+                    {
+                        connection.Open();
+                        RepositorioHerramienta.Actualizar(herramientas, connection, tx);
+
+                        // Este proceso se debe optimizar con un SELECT IN si me chance
+                        List<Herramienta> resultados = new();
+                        herramientas.ForEach(herramienta =>
+                        {
+                            resultados.Add(RepositorioHerramienta.SeleccionarPorId(herramienta.Id.Value, connection));
+                        });
+                        return resultados;
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine("Error actualizando Herramienta. Razon: " + exception.Message);
+                        throw;
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalido");
+            }
+        }
+
+        /// <inheritdoc />
         public int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId)
         {
             SqlConnection connection = ConexionSQLServer.ObenerConexion();
@@ -166,7 +206,18 @@ namespace GestionHerramientas.Datos
                 if (!StringUtils.IsEmpty(filtro))
                 {
                     connection.Open();
-                    return RepositorioHerramienta.SelecionarPorCodigoONombreSimilar(filtro, connection);
+                    List<Herramienta> herramientas = RepositorioHerramienta.SelecionarPorCodigoONombreSimilar(filtro, connection);
+
+                    // Este proceso se debe optimizar con un SELECT IN si me chance
+                    herramientas.ForEach(herramienta =>
+                    {
+                        if (herramienta.ColaboradorId != null)
+                        {
+                            herramienta.Colaborador = RepositorioColaborador.SelecionarPorId(herramienta.ColaboradorId.Value, connection);
+                        }
+                    });
+
+                    return herramientas;
                 }
                 else
                 {

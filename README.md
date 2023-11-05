@@ -3,12 +3,12 @@ Repositorio para el desarrollo del proyecto 1 del curso 03101 – Programación 
 
 # Pendientes
 ## TODO
-1. Terminar el diseño de la pantalla de prestamo de herramienta
+1. Terminar el diseño de la pantalla de prestamo de herramienta - LISTO
 2. Agregar la funcionalidad JS al prestamo de herramienta
-   1. Funcionalidad para buscar Colaborador
-   2. Validacion de colaborador inactivo
-   3. Consultar cantidad de herramientas prestadas al colaborador
-   4. Buscar Herramienta
+   1. Funcionalidad para buscar Colaborador - LISTO
+   2. Validacion de colaborador inactivo - LISTO
+   3. Consultar cantidad de herramientas prestadas al colaborador - NO
+   4. Buscar Herramienta - LISTO
    5. Mostrar la tabla
       1. Deshabilitar herramientas prestadas, mostra info del colaborador que la posee y demas datos
    6. Seleccion de herramientas a prestar, maximo 5 del total del colaborador

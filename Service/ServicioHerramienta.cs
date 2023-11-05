@@ -3,6 +3,7 @@ using GestionHerramientas.Datos;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Util;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestionHerramientas.Service
 {
@@ -43,12 +44,34 @@ namespace GestionHerramientas.Service
             {
                 if (herramienta != null)
                 {
-                    ValidarCondicionesDePrestamo(herramienta);
+                    ValidarCondicionesDePrestamo(new List<Herramienta> { herramienta });
                     return ConectorDeDatos.ActualizarHerramienta(herramienta);
                 }
                 else
                 {
                     throw new ArgumentNullException(nameof(herramienta), "Herramienta invalida");
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error actualizando nueva Herramienta. Razon: " + error.Message);
+                throw;
+            }
+        }
+
+        /// <inheritdoc />
+        public List<Herramienta> Actualizar(List<Herramienta> herramientas)
+        {
+            try
+            {
+                if (!herramientas.IsNullOrEmpty())
+                {
+                    ValidarCondicionesDePrestamo(herramientas);
+                    return ConectorDeDatos.ActualizarHerramientas(herramientas);
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(herramientas), "Lista de Herramientas invalida");
                 }
             }
             catch (Exception error)
@@ -79,10 +102,11 @@ namespace GestionHerramientas.Service
         }
 
         // TODO: Docs
-        private void ValidarCondicionesDePrestamo(Herramienta herramienta)
+        private void ValidarCondicionesDePrestamo(List<Herramienta> herramientas)
         {
-            ValidarFechaDePrestamo(herramienta);
-            ValidarCantidadDeHerramientasPrestadas(herramienta);
+            int? colaboradorId = herramientas.ElementAt(0).ColaboradorId;
+            ValidarCantidadDeHerramientasPrestadas(colaboradorId, herramientas.Count);
+            herramientas.ForEach(ValidarFechaDePrestamo);
         }
 
         // TODO: DOcs
@@ -96,7 +120,7 @@ namespace GestionHerramientas.Service
 
                 if (diasPrestamo <= 0 || diasPrestamo > 5)
                 {
-                    throw new ArgumentException("No se puede execeder más de 5 días de préstamo");
+                    throw new ArgumentException("No se puede execeder más de 5 días de préstamo para ninguna herramienta");
                 }
             }
             else
@@ -106,15 +130,23 @@ namespace GestionHerramientas.Service
         }
 
         // TODO: Docs
-        private void ValidarCantidadDeHerramientasPrestadas(Herramienta herramienta)
+        private void ValidarCantidadDeHerramientasPrestadas(int? colaboradorId, int cantidadSolicitud)
         {
-            if (herramienta.ColaboradorId != null)
+            if (colaboradorId != null)
             {
-                int herramientasPrestadas = ConectorDeDatos.ContarHerramientasPrestadasPorColaboradorId(herramienta.ColaboradorId.Value);
+                int herramientasPrestadas = ConectorDeDatos.ContarHerramientasPrestadasPorColaboradorId(colaboradorId.Value);
 
                 if (herramientasPrestadas == 5)
                 {
                     throw new ArgumentException("El colaborador ha alcanzado el limite máximo de herramientas prestadas (5)");
+                }
+                else
+                {
+                    if (cantidadSolicitud + herramientasPrestadas > 5)
+                    {
+                        throw new ArgumentException($"No se puede procesar esta solicitud por que excede el limite máximo de herramientas prestadas (5). " +
+                        "Cantidad de herrmientas en posesión: {herramientasPrestadas}");
+                    }
                 }
             }
             else

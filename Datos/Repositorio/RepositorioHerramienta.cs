@@ -1,10 +1,13 @@
 using System.Data;
 using System.Transactions;
+using GestionHerramientas.Exceptions;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Properties;
 using GestionHerramientas.Util;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestionHerramientas.Datos.Repositorio
 {
@@ -49,8 +52,7 @@ namespace GestionHerramientas.Datos.Repositorio
                 }
                 else
                 {
-                    //TODO: Agregar un mejor mensaje de error y un exception type mas apropiado
-                    throw new Exception("No se pudo guardar la Herramienta");
+                    throw new DataBaseError.ErrorDeConsistenciaDeDatos("No se pudo guardar la Herramienta");
                 }
             }
             else
@@ -79,13 +81,46 @@ namespace GestionHerramientas.Datos.Repositorio
                 }
                 else
                 {
-                    //TODO: Agregar un mejor mensaje de error y un exception type mas apropiado
-                    throw new Exception("No se pudo actualizar la Herramienta");
+                    throw new DataBaseError.ErrorDeConsistenciaDeDatos("No se pudo actualizar la Herramienta");
                 }
             }
             else
             {
                 throw new ArgumentNullException(nameof(herramienta), "El objeto Herramienta es invalido");
+            }
+        }
+
+        /// <inheritdoc />
+        public void Actualizar(List<Herramienta> herramientas, SqlConnection connection, TransactionScope tx)
+        {
+            if (herramientas.IsNullOrEmpty())
+            {
+                int rowsAffected = 0;
+                string dml = UPDATE_HERRAMIENTA_DML;
+
+                herramientas.ForEach(herramienta =>
+                {
+                    SqlCommand update = new(dml, connection);
+                    update.Parameters.Add("@id", SqlDbType.Int).Value = herramienta.Id;
+                    update.Parameters.Add("@colaboradorId", SqlDbType.Int).Value = herramienta.ColaboradorId;
+                    update.Parameters.Add("@fechaPrestamo", SqlDbType.DateTime2).Value = herramienta.FechaPrestamo;
+                    update.Parameters.Add("@fechaDevolucion", SqlDbType.DateTime2).Value = herramienta.FechaDevolucion;
+                    update.Parameters.Add("@fechaActualizacion", SqlDbType.DateTime2).Value = DateTime.Now;
+                    rowsAffected += update.ExecuteNonQuery();
+                });
+
+                if (rowsAffected == herramientas.Count)
+                {
+                    tx.Complete();//Commit UPDATE
+                }
+                else
+                {
+                    throw new DataBaseError.ErrorDeConsistenciaDeDatos("No se pudo actualizar todas las Herramienta");
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalido");
             }
         }
 
@@ -118,7 +153,7 @@ namespace GestionHerramientas.Datos.Repositorio
                     nuevaHerramienta = new(id, codigo, nombre, descripcion, colaboradorId, new Colaborador(),
                     fechaRegistro, fechaActualizacion, fechaPrestamo, fechaDevolucion);
                 }
-
+                sqlDataReader.Close();
                 return nuevaHerramienta;
             }
             else
@@ -130,7 +165,7 @@ namespace GestionHerramientas.Datos.Repositorio
         /// <inheritdoc />
         public Herramienta SeleccionarPorCodigo(string codigo, SqlConnection connection)
         {
-            if (StringUtils.IsEmpty(codigo))
+            if (!StringUtils.IsEmpty(codigo))
             {
                 string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
                                 + PropiedadesBD._Esquema + "."
@@ -148,7 +183,7 @@ namespace GestionHerramientas.Datos.Repositorio
                     sqlDataReader.Read();
                     nuevaHerramienta = LeerRegistro(sqlDataReader);
                 }
-
+                sqlDataReader.Close();
                 return nuevaHerramienta;
             }
             else
@@ -199,7 +234,7 @@ namespace GestionHerramientas.Datos.Repositorio
                 {
                     herramientas.Add(LeerRegistro(sqlDataReader));
                 }
-
+                sqlDataReader.Close();
                 return herramientas;
             }
             else

@@ -48,13 +48,13 @@
             <div class="row mb-3">
                 <div class="row">
                     <div class="col-sm">
-                        <label class="form-label" for="Codigo">Código o nombre de la herramienta:</label>
+                        <label class="form-label" for="Filtro">Código o nombre de la herramienta:</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <input class="form-control" type="text" name="Codigo" id="Codigo" value="" required="">
-                        <div class="invalid-feedback" id="error_codigo">
+                        <input class="form-control" type="text" name="Filtro" id="Filtro" required="">
+                        <div class="invalid-feedback" id="error_filtro">
                             El criterio de búsqueda es requerido
                         </div>
                     </div>
@@ -63,6 +63,20 @@
                             Buscar herramienta <i class="fa-solid fa-magnifying-glass px-4"></i>
                         </button>
                     </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="row row-cols-sm-2 pt-4">
+                <div class="col-sm-2">
+                    <label class="form-label" for="fecha_devolucion">Fecha de devolución</label>
+                </div>
+                <div class="col-sm-3">
+                    <input class="form-control" type="date" name="fecha_devolucion" id="fecha_devolucion"
+                        required="true" />
+                </div>
+                <div class="invalid-feedback" id="error_fecha">
+                    Por favor seleccione la fecha devolción antes de continuar
                 </div>
             </div>
         </section>
@@ -80,7 +94,7 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Nombre</th>
-                                    <th>Descripción</th>
+                                    <th>Descripcion</th>
                                     <th>Condición</th>
                                     <th>Colaborador</th>
                                     <th>Fecha de devolción</th>
@@ -88,30 +102,14 @@
                                 </tr>
                             </thead>
                             <tbody id="result-body">
-                                <tr>
-                                    <td>CODIGO</td>
-                                    <td>Nombre de la herramienta</td>
-                                    <td class="desc-row">
-                                        <p class="w-100 h-100 overflow-scroll desc-row">
-                                            La descripcion de la herramienta que podria bien bien ser
-                                            relativamente larga
-                                            dependiendo de lo que ingrese el usuario
-                                        </p>
-                                    </td>
-                                    <td>No disponible</td>
-                                    <td>115830241</td>
-                                    <td>5/11/2023</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-success ms-2" disabled><i
-                                                    class="fas fa-edit"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
-
+                    <div class="invalid-feedback" id="error_seleccion">
+                        <div class="d-flex justify-content-center my-4">
+                            <p id="error_seleccion_msg"></p>
+                        </div>
+                    </div>
                 </div>
             </section>
         </section>
@@ -135,18 +133,6 @@
                                         </tr>
                                     </thead>
                                     <tbody id="seleccion-body">
-                                        <tr>
-                                            <td>CODIGO</td>
-                                            <td>Nombre de la herramienta</td>
-                                            <td>5/11/2023</td>
-                                            <td>
-                                                <div class="d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-danger ms-2"><i
-                                                            class="far fa-trash-alt"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -154,21 +140,6 @@
                     </div>
                 </div>
             </section>
-        </section>
-        <div class="pt-4">
-            <hr class="dark-gradient-hr">
-        </div>
-
-        <section>
-            <div class="row row-cols-sm-2 pt-4">
-                <div class="col-sm-2">
-                    <label class="form-label" for="fecha_devolucion">Fecha de devolución</label>
-                </div>
-                <div class="col-sm-3">
-                    <input class="form-control" type="date" name="fecha_devolucion" id="fecha_devolucion"
-                        required="true" />
-                </div>
-            </div>
         </section>
         <div class="invalid-feedback" id="error_formulario">
             <div class="d-flex justify-content-center my-4">
@@ -181,8 +152,8 @@
             </div>
         </div>
         <div class="row my-3 py-3">
-            <div class="col-sm-10">
-                <button class="btn btn-primary w-100" type="submit" id="enviar" disabled="">
+            <div class="col-sm-6">
+                <button class="btn btn-primary w-100" type="submit" id="enviar">
                     Guardar <i class="fa-solid fa-paper-plane px-4"></i>
                 </button>
             </div>
