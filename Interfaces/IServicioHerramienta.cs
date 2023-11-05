@@ -50,6 +50,25 @@ namespace GestionHerramientas.Interfaces
         /// del flujo de trabajo
         /// </exception>
         Herramienta Actualizar(Herramienta herramienta);
+
+        /// <summary>
+        /// Selecciona los registros de Herramienta donde el codigo o el nombre coincide con el crirerio (filtro) de busqueda dado
+        /// </summary>
+        /// <remarks>
+        /// Los registros seleccionados se filtran en base al parametro dado, donde tanto el codigo o el nombre de la herramienta pueden
+        /// coincidir con el filtro dado parcial o completamente.
+        /// </remarks>
+        /// <param name="filtro">
+        /// El filtro con el criterio de busqueda para la consulta de la base de datos
+        /// </param>
+        /// <returns>
+        /// Listado de <paramref cref="GestionHerramientas.Models.Herramienta">Herramienta</paramref> que cumpla con los criterios de busqueda.
+        /// En caso de que no se encuentren registros se retorna un objeto vacio.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Se lanza cuando el parametro filtro es invalido
+        /// </exception>
+        List<Herramienta> SeleccionarPorCodigoONombreSimilar(string filtro);
     }
 }
 

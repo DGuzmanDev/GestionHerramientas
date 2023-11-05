@@ -58,6 +58,12 @@ namespace GestionHerramientas.Service
             }
         }
 
+        /// <inheritdoc />
+        public List<Herramienta> SeleccionarPorCodigoONombreSimilar(string filtro)
+        {
+            throw new NotImplementedException();
+        }
+
         // TODO: Docs
         private bool ValidarIntegridadHerramienta(Herramienta herramienta)
         {

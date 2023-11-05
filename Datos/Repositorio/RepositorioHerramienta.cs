@@ -3,6 +3,7 @@ using System.Transactions;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Properties;
+using GestionHerramientas.Util;
 using Microsoft.Data.SqlClient;
 
 namespace GestionHerramientas.Datos.Repositorio
@@ -91,72 +92,147 @@ namespace GestionHerramientas.Datos.Repositorio
         /// <inheritdoc />
         public Herramienta SeleccionarPorId(int id, SqlConnection connection)
         {
-            string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
-                            + PropiedadesBD._Esquema + "."
-                            + PropiedadesBD._TablaHerramientas + " " +
-                            "WHERE " + PropiedadesBD.Herramienta._ColumnaId + " = @id";
-
-            SqlCommand select = new(query, connection);
-            select.Parameters.Add("@id", SqlDbType.Int).Value = id;
-
-            SqlDataReader sqlDataReader = select.ExecuteReader();
-
-            Herramienta nuevaHerramienta = new();
-            while (sqlDataReader.Read())
+            if (id > 0)
             {
-                string codigo = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaCodigo];
-                string nombre = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaNombre];
-                string descripcion = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaDescripcion];
-                int colaboradorId = (int)sqlDataReader[PropiedadesBD.Herramienta._ColumnaColaboradorId];
-                DateTime fechaRegistro = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaRegistro];
-                DateTime fechaActualizacion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaActualizacion];
-                DateTime fechaPrestamo = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaPrestamo];
-                DateTime fechaDevolucion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaDevolucion];
-                nuevaHerramienta = new(id, codigo, nombre, descripcion, colaboradorId, new Colaborador(),
-                fechaRegistro, fechaActualizacion, fechaPrestamo, fechaDevolucion);
-            }
+                string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
+                                            + PropiedadesBD._Esquema + "."
+                                            + PropiedadesBD._TablaHerramientas + " " +
+                                            "WHERE " + PropiedadesBD.Herramienta._ColumnaId + " = @id";
 
-            return nuevaHerramienta;
+                SqlCommand select = new(query, connection);
+                select.Parameters.Add("@id", SqlDbType.Int).Value = id;
+
+                SqlDataReader sqlDataReader = select.ExecuteReader();
+
+                Herramienta nuevaHerramienta = new();
+                while (sqlDataReader.Read())
+                {
+                    string codigo = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaCodigo];
+                    string nombre = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaNombre];
+                    string descripcion = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaDescripcion];
+                    int colaboradorId = (int)sqlDataReader[PropiedadesBD.Herramienta._ColumnaColaboradorId];
+                    DateTime fechaRegistro = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaRegistro];
+                    DateTime fechaActualizacion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaActualizacion];
+                    DateTime fechaPrestamo = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaPrestamo];
+                    DateTime fechaDevolucion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaDevolucion];
+                    nuevaHerramienta = new(id, codigo, nombre, descripcion, colaboradorId, new Colaborador(),
+                    fechaRegistro, fechaActualizacion, fechaPrestamo, fechaDevolucion);
+                }
+
+                return nuevaHerramienta;
+            }
+            else
+            {
+                throw new ArgumentException("El ID es invalido");
+            }
         }
 
         /// <inheritdoc />
         public Herramienta SeleccionarPorCodigo(string codigo, SqlConnection connection)
         {
-            string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
-                            + PropiedadesBD._Esquema + "."
-                            + PropiedadesBD._TablaHerramientas + " " +
-                            "WHERE " + PropiedadesBD.Herramienta._ColumnaCodigo + " = @codigo";
-
-            SqlCommand select = new(query, connection);
-            select.Parameters.Add("@codigo", SqlDbType.VarChar).Value = codigo;
-
-            SqlDataReader sqlDataReader = select.ExecuteReader();
-
-            Herramienta nuevaHerramienta = new();
-            while (sqlDataReader.Read())
+            if (StringUtils.IsEmpty(codigo))
             {
-                int id = (int)sqlDataReader[PropiedadesBD.Herramienta._ColumnaId];
-                string nombre = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaNombre];
-                string descripcion = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaDescripcion];
-                DateTime fechaRegistro = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaRegistro];
-                nuevaHerramienta = new(id, codigo, nombre, descripcion, fechaRegistro);
-            }
+                string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
+                                + PropiedadesBD._Esquema + "."
+                                + PropiedadesBD._TablaHerramientas + " " +
+                                "WHERE " + PropiedadesBD.Herramienta._ColumnaCodigo + " = @codigo";
 
-            return nuevaHerramienta;
+                SqlCommand select = new(query, connection);
+                select.Parameters.Add("@codigo", SqlDbType.VarChar).Value = codigo;
+
+                SqlDataReader sqlDataReader = select.ExecuteReader();
+
+                Herramienta nuevaHerramienta = new();
+                if (sqlDataReader.HasRows)
+                {
+                    sqlDataReader.Read();
+                    nuevaHerramienta = LeerRegistro(sqlDataReader);
+                }
+
+                return nuevaHerramienta;
+            }
+            else
+            {
+                throw new ArgumentException("El codigo provisto no es valido");
+            }
         }
 
         /// <inheritdoc />
         public int ContarHerramientasPrestadasPorColaboradorId(int id, SqlConnection connection)
         {
-            string query = "SELECT COUNT(id) FROM " + PropiedadesBD._BaseDeDatos + "."
-                            + PropiedadesBD._Esquema + "."
-                            + PropiedadesBD._TablaHerramientas + " " +
-                            "WHERE " + PropiedadesBD.Herramienta._ColumnaColaboradorId + " = @id";
+            if (id > 0)
+            {
+                string query = "SELECT COUNT(id) FROM " + PropiedadesBD._BaseDeDatos + "."
+                                + PropiedadesBD._Esquema + "."
+                                + PropiedadesBD._TablaHerramientas + " " +
+                                "WHERE " + PropiedadesBD.Herramienta._ColumnaColaboradorId + " = @id";
 
-            SqlCommand count = new(query, connection);
-            count.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                SqlCommand count = new(query, connection);
+                count.Parameters.Add("@id", SqlDbType.Int).Value = id;
 
-            return (int)count.ExecuteScalar();
+                return (int)count.ExecuteScalar();
+            }
+            else
+            {
+                throw new ArgumentException("El ID es invalido");
+            }
+        }
+
+        /// <inheritdoc />
+        public List<Herramienta> SelecionarPorCodigoONombreSimilar(string filtro, SqlConnection connection)
+        {
+            if (!StringUtils.IsEmpty(filtro))
+            {
+                string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
+                                + PropiedadesBD._Esquema + "."
+                                + PropiedadesBD._TablaHerramientas + " "
+                                + "WHERE " + PropiedadesBD.Herramienta._ColumnaCodigo + " LIKE @filtro "
+                                + "OR " + PropiedadesBD.Herramienta._ColumnaNombre + " LIKE  @filtro";
+
+                SqlCommand select = new(query, connection);
+                select.Parameters.Add("@filtro", SqlDbType.VarChar).Value = $"%{filtro}%";
+
+                SqlDataReader sqlDataReader = select.ExecuteReader();
+
+                List<Herramienta> herramientas = new();
+                while (sqlDataReader.Read())
+                {
+                    herramientas.Add(LeerRegistro(sqlDataReader));
+                }
+
+                return herramientas;
+            }
+            else
+            {
+                throw new ArgumentException("El filtro provisto no es valido");
+            }
+        }
+
+        /// <summary>
+        /// Extrae la informacion contenida en el fila actual en la que se ubica el SqlDataReader dado
+        /// </summary>
+        /// <remarks>
+        /// El SqlDataReader dado debe tener datos
+        /// </remarks>
+        /// <param name="sqlDataReader">
+        /// El <paramref cref="SqlDataReader" name="sqlDataReader"/> con la informacion de la DB
+        /// </param>
+        /// <returns>
+        /// Nuevo objecto <paramref cref="GestionHerramientas.Models.Herramienta">Herramienta</paramref> con 
+        /// la informacion de la fila actual segun los datos del <paramref name="sqlDataReader"/>
+        /// </returns>
+        private Herramienta LeerRegistro(SqlDataReader sqlDataReader)
+        {
+            int id = (int)sqlDataReader[PropiedadesBD.Herramienta._ColumnaId];
+            int? colaboradorId = (int?)sqlDataReader[PropiedadesBD.Herramienta._ColumnaColaboradorId];
+            string codigo = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaCodigo];
+            string nombre = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaNombre];
+            string descripcion = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaDescripcion];
+            DateTime fechaRegistro = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaRegistro];
+            DateTime fechaActualizacion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaActualizacion];
+            DateTime? fechaPrestamo = (DateTime?)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaPrestamo];
+            DateTime? fechaDevolucion = (DateTime?)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaDevolucion];
+            return new(id, codigo, nombre, descripcion, colaboradorId, null, fechaRegistro, fechaActualizacion, fechaPrestamo, fechaDevolucion);
         }
     }
 }

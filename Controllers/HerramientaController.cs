@@ -1,6 +1,7 @@
 ﻿using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Service;
+using GestionHerramientas.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionHerramientas.Controllers
@@ -69,6 +70,32 @@ namespace GestionHerramientas.Controllers
             }
 
             return respuesta;
+        }
+
+        [HttpGet]
+        [Route("buscar/nombreOcodigo")]
+        public List<Herramienta> GetHerramientasPorCodigoONombre([FromQuery(Name = "filtro")] string filtro)
+        {
+
+            List<Herramienta> resultados = new();
+
+            try
+            {
+                if (!StringUtils.IsEmpty(filtro))
+                {
+                    resultados = ServicioHerramienta.SeleccionarPorCodigoONombreSimilar(filtro);
+                }
+                else
+                {
+                    throw new ArgumentNullException("");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(GetHerramientasPorCodigoONombre), _logger);
+            }
+
+            return resultados;
         }
     }
 }

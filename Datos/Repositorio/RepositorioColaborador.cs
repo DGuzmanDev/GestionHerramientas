@@ -46,11 +46,13 @@ namespace GestionHerramientas.Datos.Repositorio
         {
             string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
                          + PropiedadesBD._Esquema + "."
-                         + PropiedadesBD._TablaColaboradores + " " +
-                         "WHERE " + PropiedadesBD.Colaborador._ColumnaIdentificacion + " = @identificacion";
+                         + PropiedadesBD._TablaColaboradores + " "
+                         + "WHERE " + PropiedadesBD.Colaborador._ColumnaIdentificacion + " = @identificacion "
+                         + "AND " + PropiedadesBD.Colaborador._ColumnaEstado + " = @estado";
 
             SqlCommand select = new(query, connection);
             select.Parameters.Add("@identificacion", SqlDbType.VarChar).Value = identificacion;
+            select.Parameters.Add("@estado", SqlDbType.Bit).Value = true;
 
             SqlDataReader sqlDataReader = select.ExecuteReader();
 

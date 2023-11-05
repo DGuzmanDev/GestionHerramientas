@@ -3,87 +3,189 @@
 }
 
 @section Scripts {
-    <script src="~/js/herramientas.js" asp-append-version="true"></script>
+    <script src="~/js/prestamo_herramientas.js" asp-append-version="true"></script>
 }
 
 <section id="formulario">
     <div class="container">
-        <form id="formulario_registro" class="needs-validation">
-            <fieldset>
-                <legend class="my-4">Prestar herramienta</legend>
-                <div class="row mb-3">
-                    <div class="row">
-                        <div class="col-sm">
-                            <label class="form-label" for="Identificacion">Identificación del
-                                colaborador</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <input class="form-control" type="text" name="Identificacion" id="Identificacion" value=""
-                                required="">
-                            <div class="invalid-feedback" id="error_id">
-                                La identificación es requerida
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <button class="btn btn-primary w-100" type="submit" id="buscar_colaborador">
-                                Buscar colaborador <i class="fa-solid fa-magnifying-glass px-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="row">
-                        <div class="col-sm">
-                            <label class="form-label" for="Codigo">Código de la herramienta:</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <input class="form-control" type="text" name="Codigo" id="Codigo" value="" required="">
-                            <div class="invalid-feedback" id="error_codigo">
-                                El código es requerido
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <button class="btn btn-primary w-100" type="submit" id="buscar_herramienta">
-                                Buscar herramienta <i class="fa-solid fa-magnifying-glass px-4"></i>
-                            </button>
-                        </div>
+        <legend class="my-4">Prestar herramienta</legend>
+        <section>
+            <div class="row mb-3">
+                <div class="row">
+                    <div class="col-sm">
+                        <label class="form-label" for="Identificacion">Identificación del
+                            colaborador</label>
                     </div>
                 </div>
                 <div class="row">
-                    @* en este mae ahora va una tabla con los resultados de la busqueda de herramientas
-                    puedo hacer un search LIKE en la DB usando el codigo de la herramienta para poder encontrar
-                    todos los codigos que hagan match con la herramienta
-                    La vara es como seleccionar las herramientas, al buscar en la tabla, tendria que tener un checkbox
-                    que se asocie a un evento que permita seleccionar N cantidad de herramientas hasta 5.
-                    Tambien puedo consultar la cantidad de herramientas que tiene un colaborador dado para saber de
-                    antemano
-                    cuantas se le pueden prestar o si quiera si es elegible para prestales mas.
-                    Al evento del checkbox le voy agregando un contador con la vara
-                    Tengo que validar si el colaborador esta activo o no al hacer la busqueda, tambien agregar esto a la
-                    logica de negocios del BE *@
-                </div>
-                <div class="invalid-feedback" id="error_formulario">
-                    <div class="d-flex justify-content-center my-4">
-                        Por favor revise el formulario y complete la información requerida antes de continuar
+                    <div class="col-sm-6">
+                        <input class="form-control" type="text" name="Identificacion" id="Identificacion">
+                        <div class="invalid-feedback" id="error_id">
+                            La identificación es requerida
+                        </div>
+                        <div class="invalid-feedback" id="error_busqueda_colaborador">
+                            <p>No se ha encontrado ningun colaborador <span class="fw-bolder">activo</span> con esta
+                                identificacion</p>
+                        </div>
                     </div>
-                </div>
-                <div class="valid-feedback" id="exito_formulario">
-                    <div class="d-flex justify-content-center my-4">
-                        El préstamo de la herramienta se ha completado con éxito
-                    </div>
-                </div>
-                <div class="row my-3 py-3">
-                    <div class="col-sm-10">
-                        <button class="btn btn-primary w-100" type="submit" id="enviar" disabled="">
-                            Guardar <i class="fa-solid fa-paper-plane px-4"></i>
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary w-100" type="submit" id="buscar_colaborador">
+                            Buscar colaborador <i class="fa-solid fa-magnifying-glass px-4"></i>
                         </button>
                     </div>
                 </div>
-            </fieldset>
-        </form>
+            </div>
+        </section>
+        <section id="datos-colaborador" class="row pb-4 mb-3" style="display: none;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="DatosColaborador" id="DatosColaborador" disabled
+                        readonly>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="row mb-3">
+                <div class="row">
+                    <div class="col-sm">
+                        <label class="form-label" for="Codigo">Código o nombre de la herramienta:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input class="form-control" type="text" name="Codigo" id="Codigo" value="" required="">
+                        <div class="invalid-feedback" id="error_codigo">
+                            El criterio de búsqueda es requerido
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-primary w-100" type="submit" id="buscar_herramienta">
+                            Buscar herramienta <i class="fa-solid fa-magnifying-glass px-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="pt-1 pb-1">
+            <hr class="dark-gradient-hr">
+        </div>
+        <section class="my-2 py-2">
+            <legend class="py-4">Listado de herramientas</legend>
+            <section id="tabla_resultados" class="mt-4">
+                <div class="container">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>Condición</th>
+                                    <th>Colaborador</th>
+                                    <th>Fecha de devolción</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-body">
+                                <tr>
+                                    <td>CODIGO</td>
+                                    <td>Nombre de la herramienta</td>
+                                    <td class="desc-row">
+                                        <p class="w-100 h-100 overflow-scroll desc-row">
+                                            La descripcion de la herramienta que podria bien bien ser
+                                            relativamente larga
+                                            dependiendo de lo que ingrese el usuario
+                                        </p>
+                                    </td>
+                                    <td>No disponible</td>
+                                    <td>115830241</td>
+                                    <td>5/11/2023</td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-success ms-2" disabled><i
+                                                    class="fas fa-edit"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+        </section>
+        <div class="pt-4">
+            <hr class="dark-gradient-hr">
+        </div>
+        <section class="my-2 py-2">
+            <legend class="py-4">Herramientas seleccionadas</legend>
+            <section id="tabla_seleccion" class="mt-4">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Nombre</th>
+                                            <th>Fecha de devolción</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="seleccion-body">
+                                        <tr>
+                                            <td>CODIGO</td>
+                                            <td>Nombre de la herramienta</td>
+                                            <td>5/11/2023</td>
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                    <button type="button" class="btn btn-danger ms-2"><i
+                                                            class="far fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <div class="pt-4">
+            <hr class="dark-gradient-hr">
+        </div>
+
+        <section>
+            <div class="row row-cols-sm-2 pt-4">
+                <div class="col-sm-2">
+                    <label class="form-label" for="fecha_devolucion">Fecha de devolución</label>
+                </div>
+                <div class="col-sm-3">
+                    <input class="form-control" type="date" name="fecha_devolucion" id="fecha_devolucion"
+                        required="true" />
+                </div>
+            </div>
+        </section>
+        <div class="invalid-feedback" id="error_formulario">
+            <div class="d-flex justify-content-center my-4">
+                Por favor revise el formulario y complete la información requerida antes de continuar
+            </div>
+        </div>
+        <div class="valid-feedback" id="exito_formulario">
+            <div class="d-flex justify-content-center my-4">
+                El préstamo de la herramienta se ha completado con éxito
+            </div>
+        </div>
+        <div class="row my-3 py-3">
+            <div class="col-sm-10">
+                <button class="btn btn-primary w-100" type="submit" id="enviar" disabled="">
+                    Guardar <i class="fa-solid fa-paper-plane px-4"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </section>

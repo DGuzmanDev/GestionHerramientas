@@ -50,6 +50,27 @@ namespace GestionHerramientas.Datos
         }
 
         /// <inheritdoc />
+       public Colaborador BuscarColaboradorPorIdentificacion(string identificacion)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                connection.Open();
+                return RepositorioColaborador.SelecionarPorIdentificacion(identificacion, connection);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error buscando contando Colaborador por identificacion. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
         public Herramienta GuardarHerramienta(Herramienta herramienta)
         {
             if (herramienta != null && herramienta.Codigo != null)

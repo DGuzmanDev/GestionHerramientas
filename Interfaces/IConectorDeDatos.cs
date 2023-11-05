@@ -8,6 +8,9 @@ namespace GestionHerramientas.Interfaces
         // TODO: Docks
         Colaborador GuardarColaborador(Colaborador colaborador);
 
+        // TODO Docs
+        Colaborador BuscarColaboradorPorIdentificacion(string identificacion);
+
         // TODO: Docs
         int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId);
 
