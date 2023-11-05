@@ -132,10 +132,10 @@ function agregar_herramienta(herramienta) {
         }
 
         if (esValida) {
-            if (colaborador !== undefined && colaborador.id !== null) {
+            if (colaborador !== undefined && colaborador.id !== 0) {
                 var fecha_devolucion = $("#fecha_devolucion").val();
 
-                if (fecha_devolucion != undefined) {
+                if (fecha_devolucion != undefined && fecha_devolucion !== '') {
                     herramienta.colaboradorId = colaborador.id;
                     herramienta.fechaDevolucion = $("#fecha_devolucion").val();
                     lista_herramientas_prestamo.push(herramienta);
