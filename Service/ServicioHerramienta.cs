@@ -8,7 +8,7 @@ namespace GestionHerramientas.Service
 {
     public class ServicioHerramienta : IServicioHerramienta
     {
-        private readonly ConectorDeDatos ConectorDeDatos;
+        private readonly IConectorDeDatos ConectorDeDatos;
 
         public ServicioHerramienta()
         {
@@ -61,7 +61,14 @@ namespace GestionHerramientas.Service
         /// <inheritdoc />
         public List<Herramienta> SeleccionarPorCodigoONombreSimilar(string filtro)
         {
-            throw new NotImplementedException();
+            if (!StringUtils.IsEmpty(filtro))
+            {
+                return ConectorDeDatos.BuscarHerramientasPorCodigoONombreSimilar(filtro);
+            }
+            else
+            {
+                throw new ArgumentException("El criterio de busqueda no es valido", nameof(filtro));
+            }
         }
 
         // TODO: Docs

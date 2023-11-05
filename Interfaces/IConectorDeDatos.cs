@@ -19,5 +19,8 @@ namespace GestionHerramientas.Interfaces
 
         // TODO: Docs
         Herramienta ActualizarHerramienta(Herramienta herramienta);
+
+        // TODO: Docs
+        List<Herramienta> BuscarHerramientasPorCodigoONombreSimilar(string filtro);
     }
 }

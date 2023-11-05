@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using System.Transactions;
 using GestionHerramientas.Datos.Repositorio;
 using GestionHerramientas.Interfaces;
+using GestionHerramientas.Util;
 
 namespace GestionHerramientas.Datos
 {
@@ -50,7 +51,7 @@ namespace GestionHerramientas.Datos
         }
 
         /// <inheritdoc />
-       public Colaborador BuscarColaboradorPorIdentificacion(string identificacion)
+        public Colaborador BuscarColaboradorPorIdentificacion(string identificacion)
         {
             SqlConnection connection = ConexionSQLServer.ObenerConexion();
 
@@ -155,6 +156,33 @@ namespace GestionHerramientas.Datos
             }
         }
 
+        /// <inheritdoc />
+        public List<Herramienta> BuscarHerramientasPorCodigoONombreSimilar(string filtro)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                if (!StringUtils.IsEmpty(filtro))
+                {
+                    connection.Open();
+                    return RepositorioHerramienta.SelecionarPorCodigoONombreSimilar(filtro, connection);
+                }
+                else
+                {
+                    throw new ArgumentException("El filtro provisto no es valido", nameof(filtro));
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
 

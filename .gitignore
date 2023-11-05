@@ -1,2 +1,7 @@
 bin/
 obj/
+.DS_Store
+.vs/
+wwwroot/.DS_Store
+wwwroot/lib/.DS_Store
+wwwroot/lib/bootstrap/.DS_Store
