@@ -8,6 +8,8 @@ namespace GestionHerramientas.Interfaces
     {
         void Guardar(Colaborador colaborador, SqlConnection connection, TransactionScope tx);
 
+        Colaborador SelecionarPorId(int id, SqlConnection connection);
+
         Colaborador SelecionarPorIdentificacion(string identificacion, SqlConnection connection);
     }
 }

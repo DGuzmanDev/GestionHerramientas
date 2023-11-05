@@ -8,10 +8,22 @@ namespace GestionHerramientas.Interfaces
         // TODO: Docks
         Colaborador GuardarColaborador(Colaborador colaborador);
 
+        // TODO Docs
+        Colaborador BuscarColaboradorPorIdentificacion(string identificacion);
+
+        // TODO: Docs
+        int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId);
+
         // TODO: Docs
         Herramienta GuardarHerramienta(Herramienta herramienta);
 
         // TODO: Docs
         Herramienta ActualizarHerramienta(Herramienta herramienta);
+
+        // TODO: Docs
+        List<Herramienta> ActualizarHerramientas(List<Herramienta> herramientas);
+
+        // TODO: Docs
+        List<Herramienta> BuscarHerramientasPorCodigoONombreSimilar(string filtro);
     }
 }

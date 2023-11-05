@@ -7,16 +7,14 @@ namespace GestionHerramientas.Service
 {
     public class ServicioColaborador : IServicioColaborador
     {
-        private readonly ConectorDeDatos ConectorDeDatos;
+        private readonly IConectorDeDatos ConectorDeDatos;
 
         public ServicioColaborador()
         {
             ConectorDeDatos = new ConectorDeDatos();
         }
 
-        /**
-         * DOCS
-         */
+        /// <inheritdoc />
         public Colaborador Guardar(Colaborador colaborador)
         {
             try
@@ -27,7 +25,7 @@ namespace GestionHerramientas.Service
                 }
                 else
                 {
-                    throw new HttpError.BadRequest("Colaborador invalido");
+                    throw new ArgumentNullException(nameof(colaborador), "Colaborador invalido");
                 }
             }
             catch (Exception error)
@@ -37,9 +35,28 @@ namespace GestionHerramientas.Service
             }
         }
 
-        /**
-         * DOCS
-         */
+        /// <inheritdoc />
+        public Colaborador BuscarPorIdentificacion(string identificacion)
+        {
+            try
+            {
+                if (!StringUtils.IsEmpty(identificacion))
+                {
+                    return ConectorDeDatos.BuscarColaboradorPorIdentificacion(identificacion);
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(identificacion), "Identificacion invalida");
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error buscando Colaborador por Identificacion. Razon: " + error.Message);
+                throw;
+            }
+        }
+
+        // TODO Docs
         private bool ValidarIntegridadColaborador(Colaborador colaborador)
         {
             return colaborador != null && !StringUtils.IsEmpty(colaborador.Identificacion)

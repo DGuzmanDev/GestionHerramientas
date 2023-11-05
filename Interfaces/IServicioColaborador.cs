@@ -3,12 +3,13 @@ using GestionHerramientas.Models;
 
 namespace GestionHerramientas.Interfaces
 {
-	public interface IServicioColaborador
-	{
-        /**
-         * DOCS
-         */
+    public interface IServicioColaborador
+    {
+        // TODO DOCS
         Colaborador Guardar(Colaborador colaborador);
+
+        // TODO Docs
+        Colaborador BuscarPorIdentificacion(string identificacion);
     }
 }
 

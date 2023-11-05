@@ -27,7 +27,7 @@ namespace GestionHerramientas.Models
         }
 
         public Herramienta(int id, string codigo, string nombre, string descripcion,
-            int? colaboradorId, Colaborador? colaborador, DateTime fechaRegistro, DateTime fechaActualizacion, DateTime fechaPrestamo, DateTime fechaDevolucion)
+            int? colaboradorId, Colaborador? colaborador, DateTime fechaRegistro, DateTime fechaActualizacion, DateTime? fechaPrestamo, DateTime? fechaDevolucion)
         {
             Id = id;
             Codigo = codigo;

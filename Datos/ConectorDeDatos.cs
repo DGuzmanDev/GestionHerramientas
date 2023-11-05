@@ -3,6 +3,8 @@ using Microsoft.Data.SqlClient;
 using System.Transactions;
 using GestionHerramientas.Datos.Repositorio;
 using GestionHerramientas.Interfaces;
+using GestionHerramientas.Util;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestionHerramientas.Datos
 {
@@ -50,6 +52,27 @@ namespace GestionHerramientas.Datos
         }
 
         /// <inheritdoc />
+        public Colaborador BuscarColaboradorPorIdentificacion(string identificacion)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                connection.Open();
+                return RepositorioColaborador.SelecionarPorIdentificacion(identificacion, connection);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error buscando contando Colaborador por identificacion. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
         public Herramienta GuardarHerramienta(Herramienta herramienta)
         {
             if (herramienta != null && herramienta.Codigo != null)
@@ -113,6 +136,104 @@ namespace GestionHerramientas.Datos
             }
         }
 
+        /// <inheritdoc />
+        public List<Herramienta> ActualizarHerramientas(List<Herramienta> herramientas)
+        {
+            if (!herramientas.IsNullOrEmpty())
+            {
+                using (TransactionScope tx = new(TransactionScopeOption.RequiresNew))
+                {
+                    SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+                    try
+                    {
+                        connection.Open();
+                        RepositorioHerramienta.Actualizar(herramientas, connection, tx);
+
+                        // Este proceso se debe optimizar con un SELECT IN si me chance
+                        List<Herramienta> resultados = new();
+                        herramientas.ForEach(herramienta =>
+                        {
+                            resultados.Add(RepositorioHerramienta.SeleccionarPorId(herramienta.Id.Value, connection));
+                        });
+                        return resultados;
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine("Error actualizando Herramienta. Razon: " + exception.Message);
+                        throw;
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalida");
+            }
+        }
+
+        /// <inheritdoc />
+        public int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                connection.Open();
+                return RepositorioHerramienta.ContarHerramientasPrestadasPorColaboradorId(colaboradorId, connection);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error guardando contando herramientas prestadas. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        /// <inheritdoc />
+        public List<Herramienta> BuscarHerramientasPorCodigoONombreSimilar(string filtro)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                if (!StringUtils.IsEmpty(filtro))
+                {
+                    connection.Open();
+                    List<Herramienta> herramientas = RepositorioHerramienta.SelecionarPorCodigoONombreSimilar(filtro, connection);
+
+                    // Este proceso se debe optimizar con un SELECT IN si me chance
+                    herramientas.ForEach(herramienta =>
+                    {
+                        if (herramienta.ColaboradorId != null)
+                        {
+                            herramienta.Colaborador = RepositorioColaborador.SelecionarPorId(herramienta.ColaboradorId.Value, connection);
+                        }
+                    });
+
+                    return herramientas;
+                }
+                else
+                {
+                    throw new ArgumentException("El filtro provisto no es valido", nameof(filtro));
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
 

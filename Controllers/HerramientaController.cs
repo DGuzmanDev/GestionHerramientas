@@ -1,7 +1,9 @@
 ﻿using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Service;
+using GestionHerramientas.Util;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GestionHerramientas.Controllers
 {
@@ -69,6 +71,58 @@ namespace GestionHerramientas.Controllers
             }
 
             return respuesta;
+        }
+
+        [HttpPut]
+        [Route("prestar/lista")]
+        public List<Herramienta> PutHerramienta([FromBody] List<Herramienta> herramientas)
+        {
+            List<Herramienta> respuesta = new();
+
+            try
+            {
+                _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramientas");
+                if (!herramientas.IsNullOrEmpty())
+                {
+                    return ServicioHerramienta.Actualizar(herramientas);
+                }
+                else
+                {
+                    throw new BadHttpRequestException("El cuerpo de la solicitud no es válido");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutHerramienta), _logger);
+            }
+
+            return respuesta;
+        }
+
+        [HttpGet]
+        [Route("buscar/nombreOcodigo")]
+        public List<Herramienta> GetHerramientasPorCodigoONombre([FromQuery(Name = "filtro")] string filtro)
+        {
+
+            List<Herramienta> resultados = new();
+
+            try
+            {
+                if (!StringUtils.IsEmpty(filtro))
+                {
+                    resultados = ServicioHerramienta.SeleccionarPorCodigoONombreSimilar(filtro);
+                }
+                else
+                {
+                    throw new ArgumentNullException("");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(GetHerramientasPorCodigoONombre), _logger);
+            }
+
+            return resultados;
         }
     }
 }

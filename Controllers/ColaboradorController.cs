@@ -1,6 +1,7 @@
 ﻿using GestionHerramientas.Interfaces;
 using GestionHerramientas.Models;
 using GestionHerramientas.Service;
+using GestionHerramientas.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestionHerramientas.Controllers
@@ -22,13 +23,15 @@ namespace GestionHerramientas.Controllers
         [Route("registrar")]
         public Colaborador PostColaborador([FromBody] Colaborador colaborador)
         {
+            Colaborador respuesta = new();
+
             try
             {
                 _logger.LogInformation("Ejecutando endpoint de registro de nuevo colaborador");
 
                 if (colaborador != null)
                 {
-                    return ServicioColaborador.Guardar(colaborador);
+                    respuesta = ServicioColaborador.Guardar(colaborador);
                 }
                 else
                 {
@@ -37,10 +40,35 @@ namespace GestionHerramientas.Controllers
             }
             catch (Exception exception)
             {
-                //TODO: Mejorar el mensaje, el manejo de errores top level y el tipo de Ex
-                Console.WriteLine("Error del controller: " + exception.Message);
-                throw;
+                TopLevelErrorHandler.ManejarError(exception, nameof(ColaboradorController), nameof(PostColaborador), _logger);
             }
+
+            return respuesta;
+        }
+
+        [HttpGet]
+        [Route("buscar/identificacion")]
+        public Colaborador GetColaboradorPorId([FromQuery(Name = "identificacion")] string identificacion)
+        {
+            Colaborador colaborador = new();
+
+            try
+            {
+                if (!StringUtils.IsEmpty(identificacion))
+                {
+                    colaborador = ServicioColaborador.BuscarPorIdentificacion(identificacion);
+                }
+                else
+                {
+                    throw new HttpError.BadRequest("Indentificacion invalida");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(ColaboradorController), nameof(GetColaboradorPorId), _logger);
+            }
+
+            return colaborador;
         }
     }
 }
