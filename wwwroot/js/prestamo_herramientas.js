@@ -142,7 +142,7 @@ function agregar_herramienta(herramienta) {
         }
 
         if (esValida) {
-            if (colaborador !== undefined && colaborador.id !== 0) {
+            if (colaborador.id !== undefined && colaborador.id !== 0) {
                 var fecha_devolucion = $("#fecha_devolucion").val();
 
                 if (fecha_devolucion != undefined && fecha_devolucion !== '') {
@@ -160,7 +160,7 @@ function agregar_herramienta(herramienta) {
                     mostrar_error_seleccion_herramienta("La fecha de devolucion es invalida");
                 }
             } else {
-                mostrar_error_seleccion_herramienta("El colaborador seleccionado es invalido");
+                mostrar_error_seleccion_herramienta("Por favor seleccione un colaborador antes de continuar");
             }
         } else {
             mostrar_error_seleccion_herramienta("La herramienta seleccionada ya ha sido seleccionada previamente");
