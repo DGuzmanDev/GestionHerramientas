@@ -93,7 +93,7 @@ namespace GestionHerramientas.Datos.Repositorio
         /// <inheritdoc />
         public void Actualizar(List<Herramienta> herramientas, SqlConnection connection, TransactionScope tx)
         {
-            if (herramientas.IsNullOrEmpty())
+            if (!herramientas.IsNullOrEmpty())
             {
                 int rowsAffected = 0;
                 string dml = UPDATE_HERRAMIENTA_DML;
@@ -120,7 +120,7 @@ namespace GestionHerramientas.Datos.Repositorio
             }
             else
             {
-                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalido");
+                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalida");
             }
         }
 

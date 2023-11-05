@@ -81,7 +81,7 @@ namespace GestionHerramientas.Controllers
 
             try
             {
-                _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramienta");
+                _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramientas");
                 if (!herramientas.IsNullOrEmpty())
                 {
                     return ServicioHerramienta.Actualizar(herramientas);

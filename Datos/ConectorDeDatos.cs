@@ -171,7 +171,7 @@ namespace GestionHerramientas.Datos
             }
             else
             {
-                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalido");
+                throw new ArgumentNullException(nameof(herramientas), "La lista de Herramientas es invalida");
             }
         }
 

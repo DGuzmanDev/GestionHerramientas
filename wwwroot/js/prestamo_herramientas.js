@@ -4,6 +4,7 @@ var lista_herramientas_prestamo = [];
 function configurar_limite_fecha() {
     var min = new Date();
     var max = new Date();
+    min.setDate(min.getDate() + 1);
     max.setDate(min.getDate() + 5);
 
     var minDay = min.getDate() < 10 ? "0" + min.getDate() : min.getDate();
@@ -251,6 +252,44 @@ function registrar_evento_busqueda_herramientas() {
     });
 }
 
+function enviar_formulario() {
+    if (lista_herramientas_prestamo.length > 0 && lista_herramientas_prestamo.length < 5) {
+        return $.ajax({
+            type: "PUT",
+            url: "/api/Herramienta/prestar/lista",
+            data: JSON.stringify(lista_herramientas_prestamo),
+            success: function (data, status) {
+                animate_feedback("exito_formulario", 5000, 500, 500);
+                limpiar_busqueda_herramienta();
+                limpiar_busqueda_colaborador();
+                $("#result-body").html("");
+                $("#seleccion-body").html("");
+                configurar_limite_fecha();
+            },
+            error: function (data, status) {
+                console.log(
+                    "HTTP request error, status " + status + " data " + JSON.stringify(data)
+                );
+
+                // aqui tengo que validar cual es el error y reaccionar acorder
+                // por ejemplo, si hay un error por duplicidad, por ahor solo navego al error page
+                // window.location.replace("/Home/Error");
+            },
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+        });
+    } else {
+        $("#error_formulario_msg").html("La cantidad de herramientas seleccionadas es inválida");
+        animate_feedback("#error_formulario", 5000, 500, 500);
+    }
+}
+
+function registrar_evento_guardar() {
+    $("#enviar").on("click", function (event) {
+        enviar_formulario();
+    });
+}
+
 $(document).ready(function () {
     console.log(
         "prestamo_herramientas.js JavaScript - Daniel Guzman Chaves - 03101 – Programación avanzada en web - UNED IIIQ 2023"
@@ -259,4 +298,5 @@ $(document).ready(function () {
     configurar_limite_fecha();
     registrar_evento_busqueda_colaborador();
     registrar_evento_busqueda_herramientas();
+    registrar_evento_guardar();
 });
