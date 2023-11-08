@@ -36,6 +36,11 @@ public class HomeController : Controller
         return View("/Views/Herramientas/PrestamoHerramienta.cshtml");
     }
 
+    public IActionResult DevolucionHerramienta()
+    {
+        return View("/Views/Herramientas/DevolucionHerramienta.cshtml");
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public async void ErrorHandler()
     {
