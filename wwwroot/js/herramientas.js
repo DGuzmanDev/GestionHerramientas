@@ -23,13 +23,9 @@ function enviar_formulario() {
       animate_feedback("exito_formulario", 5000, 500, 500);
     },
     error: function (data, status) {
-      console.log(
-        "HTTP request error, status " + status + " data " + JSON.stringify(data)
-      );
-
-      // aqui tengo que validar cual es el error y reaccionar acorder
-      // por ejemplo, si hay un error por duplicidad, por ahor solo navego al error page
-      // window.location.replace("/Home/Error");
+      window.location.replace("/Home/Error?errorMessage=" +
+        encodeURIComponent(data.responseText) + "&httpError=" +
+        encodeURIComponent(data.status + " " + data.statusText));
     },
     dataType: "json",
     contentType: "application/json; charset=utf-8",

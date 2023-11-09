@@ -5,11 +5,14 @@ using GestionHerramientas.Datos.Repositorio;
 using GestionHerramientas.Interfaces;
 using GestionHerramientas.Util;
 using Microsoft.IdentityModel.Tokens;
+using GestionHerramientas.Exceptions;
 
 namespace GestionHerramientas.Datos
 {
     public class ConectorDeDatos : IConectorDeDatos
     {
+        private static readonly string MENSAJE_UNIQ_KEY_VIOLATION = "Violation of UNIQUE KEY constraint";
+
         private readonly IRepositorioColaborador RepositorioColaborador;
         private readonly IRepositorioHerramienta RepositorioHerramienta;
 
@@ -37,6 +40,12 @@ namespace GestionHerramientas.Datos
                     catch (Exception exception)
                     {
                         Console.WriteLine("Error guardando nuevo Colaborador. Razon: " + exception.Message);
+
+                        if ((exception is SqlException) && exception.Message.Contains(MENSAJE_UNIQ_KEY_VIOLATION))
+                        {
+                            throw new DataBaseError.ViolacionDeLlaveUnica("Ya existe un colaborador con la identificación dada", exception);
+                        }
+
                         throw;
                     }
                     finally
@@ -90,6 +99,12 @@ namespace GestionHerramientas.Datos
                     catch (Exception exception)
                     {
                         Console.WriteLine("Error guardando nueva Herramienta. Razon: " + exception.Message);
+
+                        if ((exception is SqlException) && exception.Message.Contains(MENSAJE_UNIQ_KEY_VIOLATION))
+                        {
+                            throw new DataBaseError.ViolacionDeLlaveUnica("Ya existe una herramienta con el código dado", exception);
+                        }
+
                         throw;
                     }
                     finally

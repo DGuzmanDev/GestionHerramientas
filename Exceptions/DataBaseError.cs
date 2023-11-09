@@ -19,6 +19,16 @@ namespace GestionHerramientas.Exceptions
             public ErrorDeConsistenciaDeDatos(string error, Exception causa) : base(error, causa) { }
         }
 
+        public class ViolacionDeLlaveUnica : DataBaseError
+        {
+
+            public ViolacionDeLlaveUnica() : base() { }
+
+            public ViolacionDeLlaveUnica(string error) : base(error) { }
+
+            public ViolacionDeLlaveUnica(string error, Exception causa) : base(error, causa) { }
+        }
+
     }
 }
 
