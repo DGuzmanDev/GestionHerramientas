@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.SqlTypes;
 using System.Transactions;
 using GestionHerramientas.Exceptions;
 using GestionHerramientas.Interfaces;
@@ -102,9 +103,9 @@ namespace GestionHerramientas.Datos.Repositorio
                 {
                     SqlCommand update = new(dml, connection);
                     update.Parameters.Add("@id", SqlDbType.Int).Value = herramienta.Id;
-                    update.Parameters.Add("@colaboradorId", SqlDbType.Int).Value = herramienta.ColaboradorId;
-                    update.Parameters.Add("@fechaPrestamo", SqlDbType.DateTime2).Value = herramienta.FechaPrestamo;
-                    update.Parameters.Add("@fechaDevolucion", SqlDbType.DateTime2).Value = herramienta.FechaDevolucion;
+                    update.Parameters.Add("@colaboradorId", SqlDbType.Int).Value = herramienta.ColaboradorId != null ? herramienta.ColaboradorId : DBNull.Value;
+                    update.Parameters.Add("@fechaPrestamo", SqlDbType.DateTime2).Value = herramienta.FechaPrestamo != null ? herramienta.FechaPrestamo : DBNull.Value;
+                    update.Parameters.Add("@fechaDevolucion", SqlDbType.DateTime2).Value = herramienta.FechaDevolucion != null ? herramienta.FechaDevolucion : DBNull.Value;
                     update.Parameters.Add("@fechaActualizacion", SqlDbType.DateTime2).Value = DateTime.Now;
                     rowsAffected += update.ExecuteNonQuery();
                 });
@@ -142,16 +143,7 @@ namespace GestionHerramientas.Datos.Repositorio
                 Herramienta nuevaHerramienta = new();
                 while (sqlDataReader.Read())
                 {
-                    string codigo = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaCodigo];
-                    string nombre = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaNombre];
-                    string descripcion = (string)sqlDataReader[PropiedadesBD.Herramienta._ColumnaDescripcion];
-                    int colaboradorId = (int)sqlDataReader[PropiedadesBD.Herramienta._ColumnaColaboradorId];
-                    DateTime fechaRegistro = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaRegistro];
-                    DateTime fechaActualizacion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaActualizacion];
-                    DateTime fechaPrestamo = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaPrestamo];
-                    DateTime fechaDevolucion = (DateTime)sqlDataReader[PropiedadesBD.Herramienta._ColumnaFechaDevolucion];
-                    nuevaHerramienta = new(id, codigo, nombre, descripcion, colaboradorId, new Colaborador(),
-                    fechaRegistro, fechaActualizacion, fechaPrestamo, fechaDevolucion);
+                    nuevaHerramienta = LeerRegistro(sqlDataReader);
                 }
                 sqlDataReader.Close();
                 return nuevaHerramienta;
@@ -177,14 +169,14 @@ namespace GestionHerramientas.Datos.Repositorio
 
                 SqlDataReader sqlDataReader = select.ExecuteReader();
 
-                Herramienta nuevaHerramienta = new();
+                Herramienta herramienta = new();
                 if (sqlDataReader.HasRows)
                 {
                     sqlDataReader.Read();
-                    nuevaHerramienta = LeerRegistro(sqlDataReader);
+                    herramienta = LeerRegistro(sqlDataReader);
                 }
                 sqlDataReader.Close();
-                return nuevaHerramienta;
+                return herramienta;
             }
             else
             {
@@ -240,6 +232,36 @@ namespace GestionHerramientas.Datos.Repositorio
             else
             {
                 throw new ArgumentException("El filtro provisto no es valido");
+            }
+        }
+
+        /// <inheritdoc />
+
+        public List<Herramienta> SelecionarPorColaboradorId(int id, SqlConnection connection)
+        {
+            if (id > 0)
+            {
+                string query = "SELECT * FROM " + PropiedadesBD._BaseDeDatos + "."
+                                + PropiedadesBD._Esquema + "."
+                                + PropiedadesBD._TablaHerramientas + " " +
+                                "WHERE " + PropiedadesBD.Herramienta._ColumnaColaboradorId + " = @id";
+
+                SqlCommand select = new(query, connection);
+                select.Parameters.Add("@id", SqlDbType.Int).Value = id;
+
+                SqlDataReader sqlDataReader = select.ExecuteReader();
+
+                List<Herramienta> herramientas = new();
+                while (sqlDataReader.Read())
+                {
+                    herramientas.Add(LeerRegistro(sqlDataReader));
+                }
+                sqlDataReader.Close();
+                return herramientas;
+            }
+            else
+            {
+                throw new ArgumentException("El colaborador ID provisto no es valido");
             }
         }
 

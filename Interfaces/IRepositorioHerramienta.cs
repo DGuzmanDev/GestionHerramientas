@@ -25,6 +25,9 @@ namespace GestionHerramientas.Interfaces
         List<Herramienta> SelecionarPorCodigoONombreSimilar(string filtro, SqlConnection connection);
 
         // TODO: Docs
+        List<Herramienta> SelecionarPorColaboradorId(int id, SqlConnection connection);
+
+        // TODO: Docs
         int ContarHerramientasPrestadasPorColaboradorId(int id, SqlConnection connection);
     }
 }
