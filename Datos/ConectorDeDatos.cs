@@ -234,6 +234,34 @@ namespace GestionHerramientas.Datos
                 connection.Close();
             }
         }
+
+        /// <inheritdoc />
+        public List<Herramienta> BuscarHerramientasPorColaboradorId(int id)
+        {
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                if (id > 0)
+                {
+                    connection.Open();
+                    return RepositorioHerramienta.SelecionarPorColaboradorId(id, connection);
+                }
+                else
+                {
+                    throw new ArgumentException("El colaborador ID provisto no es valido", nameof(id));
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
 

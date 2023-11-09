@@ -62,17 +62,10 @@ function registrar_evento_formulario() {
   });
 }
 
-function registrar_evento_borrar() {
-  $("#cancelar").on("click", function (event) {
-    $("#formulario_registro")[0].reset();
-  });
-}
-
 $(document).ready(function () {
   console.log(
     "colaboradores.js JavaScript - Daniel Guzman Chaves - 03101 – Programación avanzada en web - UNED IIIQ 2023"
   );
 
-  registrar_evento_borrar();
   registrar_evento_formulario();
 });

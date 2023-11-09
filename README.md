@@ -16,7 +16,7 @@ Repositorio para el desarrollo del proyecto 1 del curso 03101 – Programación 
    5. Seleccion de herramientas a prestar, maximo 5 del total del colaborador - LISTO
    6. Seleccionar fecha de devolucion, mayor o igual a hoy y, maximo 5 dias - LISTO
    7. HTTP request(s), idealmente solo 1 con todas las herramientas y el colaborador ID - LISTO
-   8. Pantalla de devolucion de herramientas
+   8. Pantalla de devolucion de herramientas - LISTO
    9. Agregar el manejo de errores
       1. Bad request
       2. Conflicts, etc - Ver PDF con requerimientos para cada pantalla

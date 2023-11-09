@@ -38,7 +38,7 @@ namespace GestionHerramientas.Service
         }
 
         /// <inheritdoc />
-        public Herramienta Actualizar(Herramienta herramienta)
+        public Herramienta Prestar(Herramienta herramienta)
         {
             try
             {
@@ -60,13 +60,41 @@ namespace GestionHerramientas.Service
         }
 
         /// <inheritdoc />
-        public List<Herramienta> Actualizar(List<Herramienta> herramientas)
+        public List<Herramienta> Prestar(List<Herramienta> herramientas)
         {
             try
             {
                 if (!herramientas.IsNullOrEmpty())
                 {
                     ValidarCondicionesDePrestamo(herramientas);
+                    return ConectorDeDatos.ActualizarHerramientas(herramientas);
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(herramientas), "Lista de Herramientas invalida");
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error actualizando nueva Herramienta. Razon: " + error.Message);
+                throw;
+            }
+        }
+
+        /// <inheritdoc />
+        public List<Herramienta> Devolver(List<Herramienta> herramientas)
+        {
+            try
+            {
+                if (!herramientas.IsNullOrEmpty())
+                {
+                    herramientas.ForEach(herramienta =>
+                    {
+                        herramienta.FechaPrestamo = null;
+                        herramienta.FechaDevolucion = null;
+                        herramienta.ColaboradorId = null;
+                    });
+
                     return ConectorDeDatos.ActualizarHerramientas(herramientas);
                 }
                 else
@@ -91,6 +119,19 @@ namespace GestionHerramientas.Service
             else
             {
                 throw new ArgumentException("El criterio de busqueda no es valido", nameof(filtro));
+            }
+        }
+
+        /// <inheritdoc />
+        public List<Herramienta> SeleccionarPorColaboradorId(int id)
+        {
+            if (id > 0)
+            {
+                return ConectorDeDatos.BuscarHerramientasPorColaboradorId(id);
+            }
+            else
+            {
+                throw new ArgumentException("El colaborador no es valido", nameof(id));
             }
         }
 

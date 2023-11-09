@@ -25,5 +25,8 @@ namespace GestionHerramientas.Interfaces
 
         // TODO: Docs
         List<Herramienta> BuscarHerramientasPorCodigoONombreSimilar(string filtro);
+
+         // TODO: Docs
+        List<Herramienta> BuscarHerramientasPorColaboradorId(int id);
     }
 }

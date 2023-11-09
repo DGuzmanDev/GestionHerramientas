@@ -49,7 +49,7 @@ namespace GestionHerramientas.Controllers
 
         [HttpPut]
         [Route("prestar")]
-        public Herramienta PutHerramienta([FromBody] Herramienta herramienta)
+        public Herramienta PutPrestarHerramienta([FromBody] Herramienta herramienta)
         {
             Herramienta respuesta = new();
 
@@ -58,7 +58,7 @@ namespace GestionHerramientas.Controllers
                 _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramienta");
                 if (herramienta != null)
                 {
-                    return ServicioHerramienta.Actualizar(herramienta);
+                    return ServicioHerramienta.Prestar(herramienta);
                 }
                 else
                 {
@@ -67,7 +67,7 @@ namespace GestionHerramientas.Controllers
             }
             catch (Exception exception)
             {
-                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutHerramienta), _logger);
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutPrestarHerramienta), _logger);
             }
 
             return respuesta;
@@ -75,16 +75,16 @@ namespace GestionHerramientas.Controllers
 
         [HttpPut]
         [Route("prestar/lista")]
-        public List<Herramienta> PutHerramienta([FromBody] List<Herramienta> herramientas)
+        public List<Herramienta> PutPrestarHerramientas([FromBody] List<Herramienta> herramientas)
         {
             List<Herramienta> respuesta = new();
 
             try
             {
-                _logger.LogInformation("Ejecutando endpoint de actualicacion de Herramientas");
+                _logger.LogInformation("Ejecutando endpoint de prestamos de Herramientas");
                 if (!herramientas.IsNullOrEmpty())
                 {
-                    return ServicioHerramienta.Actualizar(herramientas);
+                    return ServicioHerramienta.Prestar(herramientas);
                 }
                 else
                 {
@@ -93,7 +93,33 @@ namespace GestionHerramientas.Controllers
             }
             catch (Exception exception)
             {
-                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutHerramienta), _logger);
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutPrestarHerramientas), _logger);
+            }
+
+            return respuesta;
+        }
+
+        [HttpPut]
+        [Route("devolver/lista")]
+        public List<Herramienta> PutDevolverHerramientas([FromBody] List<Herramienta> herramientas)
+        {
+            List<Herramienta> respuesta = new();
+
+            try
+            {
+                _logger.LogInformation("Ejecutando endpoint de devolucion de Herramientas");
+                if (!herramientas.IsNullOrEmpty())
+                {
+                    return ServicioHerramienta.Devolver(herramientas);
+                }
+                else
+                {
+                    throw new BadHttpRequestException("El cuerpo de la solicitud no es válido");
+                }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(PutDevolverHerramientas), _logger);
             }
 
             return respuesta;
@@ -114,8 +140,27 @@ namespace GestionHerramientas.Controllers
                 }
                 else
                 {
-                    throw new ArgumentNullException("");
+                    throw new ArgumentNullException(nameof(filtro), "El criterio de busqueda en invalido");
                 }
+            }
+            catch (Exception exception)
+            {
+                TopLevelErrorHandler.ManejarError(exception, nameof(HerramientaController), nameof(GetHerramientasPorCodigoONombre), _logger);
+            }
+
+            return resultados;
+        }
+
+        [HttpGet]
+        [Route("buscar/colaboradorId")]
+        public List<Herramienta> GetHerramientasPorColaboradorId([FromQuery(Name = "id")] int id)
+        {
+
+            List<Herramienta> resultados = new();
+
+            try
+            {
+                resultados = ServicioHerramienta.SeleccionarPorColaboradorId(id);
             }
             catch (Exception exception)
             {
