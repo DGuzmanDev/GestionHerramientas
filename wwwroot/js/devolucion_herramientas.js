@@ -187,22 +187,32 @@ function actualizar_tabla_seleccion(herramienta) {
 }
 
 function enviar_formulario() {
-    return $.ajax({
-        type: "PUT",
-        url: "/api/Herramienta/devolver/lista",
-        data: JSON.stringify(lista_herramientas_devolucion),
-        success: function (data, status) {
-            animate_feedback("exito_formulario", 5000, 500, 500);
-            reiniciar_formulario();
-        },
-        error: function (data, status) {
-            window.location.replace("/Home/Error?errorMessage=" +
-                encodeURIComponent(data.responseText) + "&httpError=" +
-                encodeURIComponent(data.status + " " + data.statusText));
-        },
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-    });
+    if (colaborador.id != undefined) {
+        if (lista_herramientas_devolucion.length > 0) {
+            return $.ajax({
+                type: "PUT",
+                url: "/api/Herramienta/devolver/lista",
+                data: JSON.stringify(lista_herramientas_devolucion),
+                success: function (data, status) {
+                    animate_feedback("exito_formulario", 5000, 500, 500);
+                    reiniciar_formulario();
+                },
+                error: function (data, status) {
+                    window.location.replace("/Home/Error?errorMessage=" +
+                        encodeURIComponent(data.responseText) + "&httpError=" +
+                        encodeURIComponent(data.status + " " + data.statusText));
+                },
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+            });
+        } else {
+            $("#error_formulario_msg").html("Por favor seleccione al menos 1 herramienta para devolución");
+            animate_feedback("error_formulario", 5000, 500, 500);
+        }
+    } else {
+        $("#error_formulario_msg").html("Por favor seleccione un colaborador");
+        animate_feedback("error_formulario", 5000, 500, 500);
+    }
 }
 
 function registrar_evento_guardar() {
