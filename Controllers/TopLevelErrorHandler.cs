@@ -1,4 +1,6 @@
 
+using GestionHerramientas.Exceptions;
+
 namespace GestionHerramientas.Controllers
 {
     public class TopLevelErrorHandler
@@ -14,6 +16,10 @@ namespace GestionHerramientas.Controllers
             else if (error is ArgumentNullException || error is ArgumentException)
             {
                 throw new HttpError.BadRequest($"La solicitud no puede ser procesada: {error.Message}");
+            }
+            else if (error is DataBaseError.ViolacionDeLlaveUnica conflicto)
+            {
+                throw new HttpError.Conflict($"Se ha producido un conflicto: {conflicto.Message}");
             }
             else
             {

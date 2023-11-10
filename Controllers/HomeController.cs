@@ -56,7 +56,7 @@ public class HomeController : Controller
             if (exceptionHandlerPathFeature?.Error is HttpError httpError)
             {
                 statusCode = (int)httpError.StatusCode;
-                responseBody = httpError.ReasonPrase;
+                responseBody = httpError.ReasonPhrase;
             }
             else
             {
@@ -68,11 +68,18 @@ public class HomeController : Controller
         await HttpContext.Response.WriteAsJsonAsync(responseBody);
     }
 
+    [HttpGet]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult Error([FromQuery] string? errorMessage, [FromQuery] string? httpError)
     {
         _logger.LogError("Redireccionamiento a la pagina de error");
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        ErrorViewModel errorViewModel = new()
+        {
+            HttpError = httpError ?? "Error desconocido",
+            ErrorMessage = errorMessage ?? "No hay detalles adicionales",
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        };
+        return View(errorViewModel);
     }
 }
 

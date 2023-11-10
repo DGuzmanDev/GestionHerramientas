@@ -57,6 +57,7 @@ function cargar_resultados_herramientas() {
 
                 lista_herramientas_devolucion.push(herramientaSelecionada);
                 actualizar_tabla_seleccion(herramientaSelecionada);
+                $("#herramienta-" + herramientaId).prop("disabled", true);
             } else {
                 mostrar_error_devolucion_herramientas("Esta herramienta ya ha sido seleccionada", 3000);
             }
@@ -104,13 +105,9 @@ function buscar_herramientas(colaboradorId) {
             }
         },
         error: function (data, status) {
-            console.log(
-                "HTTP request error, status " + status + " data " + JSON.stringify(data)
-            );
-
-            // aqui tengo que validar cual es el error y reaccionar acorder
-            // por ejemplo, si hay un error por duplicidad, por ahor solo navego al error page
-            // window.location.replace("/Home/Error");
+            window.location.replace("/Home/Error?errorMessage=" +
+                encodeURIComponent(data.responseText) + "&httpError=" +
+                encodeURIComponent(data.status + " " + data.statusText));
         },
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -137,13 +134,9 @@ function buscar_colaborador(identificacion) {
             }
         },
         error: function (data, status) {
-            console.log(
-                "HTTP request error, status " + status + " data " + JSON.stringify(data)
-            );
-
-            // aqui tengo que validar cual es el error y reaccionar acorder
-            // por ejemplo, si hay un error por duplicidad, por ahor solo navego al error page
-            // window.location.replace("/Home/Error");
+            window.location.replace("/Home/Error?errorMessage=" +
+                encodeURIComponent(data.responseText) + "&httpError=" +
+                encodeURIComponent(data.status + " " + data.statusText));
         },
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -195,26 +188,36 @@ function actualizar_tabla_seleccion(herramienta) {
 }
 
 function enviar_formulario() {
-    return $.ajax({
-        type: "PUT",
-        url: "/api/Herramienta/devolver/lista",
-        data: JSON.stringify(lista_herramientas_devolucion),
-        success: function (data, status) {
-            animate_feedback("exito_formulario", 5000, 500, 500);
-            reiniciar_formulario();
-        },
-        error: function (data, status) {
-            console.log(
-                "HTTP request error, status " + status + " data " + JSON.stringify(data)
-            );
+    if (colaborador.id != undefined) {
+        if (lista_herramientas_devolucion.length > 0) {
+            return $.ajax({
+                type: "PUT",
+                url: "/api/Herramienta/devolver/lista",
+                data: JSON.stringify(lista_herramientas_devolucion),
+                success: function (data, status) {
+                    animate_feedback("exito_formulario", 3000, 500, 500);
+                    reiniciar_formulario();
 
-            // aqui tengo que validar cual es el error y reaccionar acorder
-            // por ejemplo, si hay un error por duplicidad, por ahor solo navego al error page
-            // window.location.replace("/Home/Error");
-        },
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-    });
+                    setTimeout(function () {
+                        window.location.replace("/Home/Index");
+                    }, 3000);
+                },
+                error: function (data, status) {
+                    window.location.replace("/Home/Error?errorMessage=" +
+                        encodeURIComponent(data.responseText) + "&httpError=" +
+                        encodeURIComponent(data.status + " " + data.statusText));
+                },
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+            });
+        } else {
+            $("#error_formulario_msg").html("Por favor seleccione al menos 1 herramienta para devolución");
+            animate_feedback("error_formulario", 5000, 500, 500);
+        }
+    } else {
+        $("#error_formulario_msg").html("Por favor seleccione un colaborador");
+        animate_feedback("error_formulario", 5000, 500, 500);
+    }
 }
 
 function registrar_evento_guardar() {
