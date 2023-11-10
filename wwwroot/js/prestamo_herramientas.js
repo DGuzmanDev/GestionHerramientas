@@ -281,8 +281,12 @@ function enviar_formulario() {
             url: "/api/Herramienta/prestar/lista",
             data: JSON.stringify(lista_herramientas_prestamo),
             success: function (data, status) {
-                animate_feedback("exito_formulario", 5000, 500, 500);
+                animate_feedback("exito_formulario", 3000, 500, 500);
                 reiniciar_formulario();
+
+                setTimeout(function () {
+                    window.location.replace("/Home/Index");
+                }, 3000);
             },
             error: function (data, status) {
                 window.location.replace("/Home/Error?errorMessage=" +

@@ -57,6 +57,7 @@ function cargar_resultados_herramientas() {
 
                 lista_herramientas_devolucion.push(herramientaSelecionada);
                 actualizar_tabla_seleccion(herramientaSelecionada);
+                $("#herramienta-" + herramientaId).prop("disabled", true);
             } else {
                 mostrar_error_devolucion_herramientas("Esta herramienta ya ha sido seleccionada", 3000);
             }
@@ -194,8 +195,12 @@ function enviar_formulario() {
                 url: "/api/Herramienta/devolver/lista",
                 data: JSON.stringify(lista_herramientas_devolucion),
                 success: function (data, status) {
-                    animate_feedback("exito_formulario", 5000, 500, 500);
+                    animate_feedback("exito_formulario", 3000, 500, 500);
                     reiniciar_formulario();
+
+                    setTimeout(function () {
+                        window.location.replace("/Home/Index");
+                    }, 3000);
                 },
                 error: function (data, status) {
                     window.location.replace("/Home/Error?errorMessage=" +
