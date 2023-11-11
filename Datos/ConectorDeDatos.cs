@@ -6,6 +6,7 @@ using GestionHerramientas.Interfaces;
 using GestionHerramientas.Util;
 using Microsoft.IdentityModel.Tokens;
 using GestionHerramientas.Exceptions;
+using System.Timers;
 
 namespace GestionHerramientas.Datos
 {
@@ -229,31 +230,59 @@ namespace GestionHerramientas.Datos
         /// <inheritdoc />
         public List<Herramienta> BuscarHerramientasPorCodigoONombreSimilar(string filtro)
         {
-            if (!StringUtils.IsEmpty(filtro))
+            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+            try
+            {
+                if (!StringUtils.IsEmpty(filtro))
+                {
+                    connection.Open();
+                    List<Herramienta> herramientas = RepositorioHerramienta.SelecionarPorCodigoONombreSimilar(filtro, connection);
+
+                    // Este proceso se debe optimizar con un SELECT IN si me chance
+                    herramientas.ForEach(herramienta =>
+                    {
+                        if (herramienta.ColaboradorId != null)
+                        {
+                            herramienta.Colaborador = RepositorioColaborador.SelecionarPorId(herramienta.ColaboradorId.Value, connection);
+                        }
+                    });
+
+                    return herramientas;
+                }
+                else
+                {
+                    throw new ArgumentException("El filtro provisto no es valido", nameof(filtro));
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        /// <inheritdoc />
+        public List<Herramienta> BuscarHerramientasPorColaboradorId(int id)
+        {
+            if (id > 0)
             {
                 SqlConnection connection = ConexionSQLServer.ObenerConexion();
 
                 try
                 {
-                    if (!StringUtils.IsEmpty(filtro))
+                    if (id > 0)
                     {
                         connection.Open();
-                        List<Herramienta> herramientas = RepositorioHerramienta.SelecionarPorCodigoONombreSimilar(filtro, connection);
-
-                        // Este proceso se debe optimizar con un SELECT IN si me chance
-                        herramientas.ForEach(herramienta =>
-                        {
-                            if (herramienta.ColaboradorId != null)
-                            {
-                                herramienta.Colaborador = RepositorioColaborador.SelecionarPorId(herramienta.ColaboradorId.Value, connection);
-                            }
-                        });
-
-                        return herramientas;
+                        return RepositorioHerramienta.SelecionarPorColaboradorId(id, connection);
                     }
                     else
                     {
-                        throw new ArgumentException("El filtro provisto no es valido", nameof(filtro));
+                        throw new ArgumentException("El colaborador ID provisto no es valido", nameof(id));
                     }
                 }
                 catch (Exception exception)
@@ -268,35 +297,7 @@ namespace GestionHerramientas.Datos
             }
             else
             {
-                throw new ArgumentNullException(nameof(filtro), "El fltro de busqueda dado no es valido");
-            }
-        }
-
-        /// <inheritdoc />
-        public List<Herramienta> BuscarHerramientasPorColaboradorId(int id)
-        {
-            SqlConnection connection = ConexionSQLServer.ObenerConexion();
-
-            try
-            {
-                if (id > 0)
-                {
-                    connection.Open();
-                    return RepositorioHerramienta.SelecionarPorColaboradorId(id, connection);
-                }
-                else
-                {
-                    throw new ArgumentException("El colaborador ID provisto no es valido", nameof(id));
-                }
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
-                throw;
-            }
-            finally
-            {
-                connection.Close();
+                throw new ArgumentException(nameof(id), "El ID dado no es valido");
             }
         }
     }

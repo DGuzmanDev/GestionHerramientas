@@ -137,6 +137,9 @@ namespace GestionHerramientas.Interfaces
         /// <returns>
         /// La lista de <see cref="GestionHerramientas.Models.Herramienta">Herramienta</see> que coniciden con el filtro de busqueda
         /// </returns>
+        /// <exception cref="ArgumentException">
+        /// Se lanza cuando el parametro <paramref name="id"/> es invalido 
+        /// </exception>
         List<Herramienta> BuscarHerramientasPorColaboradorId(int id);
     }
 }
