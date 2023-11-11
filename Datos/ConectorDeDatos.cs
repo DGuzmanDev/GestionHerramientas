@@ -6,6 +6,7 @@ using GestionHerramientas.Interfaces;
 using GestionHerramientas.Util;
 using Microsoft.IdentityModel.Tokens;
 using GestionHerramientas.Exceptions;
+using System.Timers;
 
 namespace GestionHerramientas.Datos
 {
@@ -63,25 +64,33 @@ namespace GestionHerramientas.Datos
         /// <inheritdoc />
         public Colaborador BuscarColaboradorPorIdentificacion(string identificacion)
         {
-            SqlConnection connection = ConexionSQLServer.ObenerConexion();
 
-            try
+            if (!StringUtils.IsEmpty(identificacion))
             {
-                connection.Open();
-                return RepositorioColaborador.SelecionarPorIdentificacion(identificacion, connection);
+                SqlConnection connection = ConexionSQLServer.ObenerConexion();
+
+                try
+                {
+                    connection.Open();
+                    return RepositorioColaborador.SelecionarPorIdentificacion(identificacion, connection);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine("Error buscando contando Colaborador por identificacion. Razon: " + exception.Message);
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
-            catch (Exception exception)
+            else
             {
-                Console.WriteLine("Error buscando contando Colaborador por identificacion. Razon: " + exception.Message);
-                throw;
-            }
-            finally
-            {
-                connection.Close();
+                throw new ArgumentNullException(nameof(identificacion), "La identificacion provista no es valida");
             }
         }
 
-
+        /// <inheritdoc />
         public Herramienta GuardarHerramienta(Herramienta herramienta)
         {
             if (herramienta != null && herramienta.Codigo != null)
@@ -193,21 +202,28 @@ namespace GestionHerramientas.Datos
         /// <inheritdoc />
         public int ContarHerramientasPrestadasPorColaboradorId(int colaboradorId)
         {
-            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+            if (colaboradorId > 0)
+            {
+                SqlConnection connection = ConexionSQLServer.ObenerConexion();
 
-            try
-            {
-                connection.Open();
-                return RepositorioHerramienta.ContarHerramientasPrestadasPorColaboradorId(colaboradorId, connection);
+                try
+                {
+                    connection.Open();
+                    return RepositorioHerramienta.ContarHerramientasPrestadasPorColaboradorId(colaboradorId, connection);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine("Error guardando contando herramientas prestadas. Razon: " + exception.Message);
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
-            catch (Exception exception)
+            else
             {
-                Console.WriteLine("Error guardando contando herramientas prestadas. Razon: " + exception.Message);
-                throw;
-            }
-            finally
-            {
-                connection.Close();
+                throw new ArgumentException(nameof(colaboradorId), "El colaborador ID dado no es valido");
             }
         }
 
@@ -253,28 +269,35 @@ namespace GestionHerramientas.Datos
         /// <inheritdoc />
         public List<Herramienta> BuscarHerramientasPorColaboradorId(int id)
         {
-            SqlConnection connection = ConexionSQLServer.ObenerConexion();
+            if (id > 0)
+            {
+                SqlConnection connection = ConexionSQLServer.ObenerConexion();
 
-            try
-            {
-                if (id > 0)
+                try
                 {
-                    connection.Open();
-                    return RepositorioHerramienta.SelecionarPorColaboradorId(id, connection);
+                    if (id > 0)
+                    {
+                        connection.Open();
+                        return RepositorioHerramienta.SelecionarPorColaboradorId(id, connection);
+                    }
+                    else
+                    {
+                        throw new ArgumentException("El colaborador ID provisto no es valido", nameof(id));
+                    }
                 }
-                else
+                catch (Exception exception)
                 {
-                    throw new ArgumentException("El colaborador ID provisto no es valido", nameof(id));
+                    Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
-            catch (Exception exception)
+            else
             {
-                Console.WriteLine("Error consultando contando herramientas. Razon: " + exception.Message);
-                throw;
-            }
-            finally
-            {
-                connection.Close();
+                throw new ArgumentException(nameof(id), "El ID dado no es valido");
             }
         }
     }
