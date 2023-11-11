@@ -56,7 +56,14 @@ namespace GestionHerramientas.Service
             }
         }
 
-        // TODO Docs
+        /// <summary>
+        /// Valida la integrdidad del <paramref name="colaborador"/> dado.
+        /// </summary>
+        /// <param name="colaborador"></param>
+        /// <returns>
+        /// <see langword="true"/> si y solo si el <paramref name="colaborador"/> cumple con todas las condiciones
+        /// de integridad esperadas para el flujo de registro de un nuevo Colaborador
+        /// </returns>
         private bool ValidarIntegridadColaborador(Colaborador colaborador)
         {
             return colaborador != null && !StringUtils.IsEmpty(colaborador.Identificacion)
